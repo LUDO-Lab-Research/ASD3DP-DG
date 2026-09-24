@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ASD3DP-DG public dataset guide">
+<title>Files · ASD3DP-DG</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><a class="brand" href="index.html">ASD3DP-DG</a><nav aria-label="Guide"><a href="index.html">Overview</a><a href="collection.html">Collection</a><a href="layout.html" aria-current="page">Files</a><a href="timebase.html">Time coordinates</a><a href="selection.html">Clip selection</a><a href="annotations.html">Annotations</a><a href="schemas.html">Schemas</a><a href="fields.html">Field dictionary</a><a href="verification.html">Verification</a><a href="limits.html">Limitations</a><a href="download.html">Downloads</a></nav></header>
+<main id="content"><h1 id="folders-and-files">Folders and files</h1>
+<p>The public dataset is organized into three archive groups, following the distribution pattern of <a href="https://zenodo.org/records/21313911">ASD3DP</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>all</code></td>
+<td>Continuous source recordings and session context</td>
+</tr>
+<tr>
+<td><code>annotations</code></td>
+<td>Session, clip, timing, and interval tables</td>
+</tr>
+<tr>
+<td><code>clipped</code></td>
+<td>Selected 10-second mono WAVs by channel</td>
+</tr>
+</tbody>
+</table>
+<p>The final archive names, part counts, checksums, and download location will appear on <a href="download.html">Downloads</a> after packaging and remote verification. A split archive part is only one piece of its group; all parts of a group are needed for extraction.</p>
+<h2 id="file-relationships">File relationships</h2>
+<p>A recording session provides one four-channel source WAV. A selected temporal clip refers to one source-frame interval and has four corresponding mono WAVs. Use the clip plan and audio manifest to join clip IDs to source intervals, channel paths, and hashes. Use session annotation tables for printer/build and collection condition, and range tables for activity within a clip.</p>
+<p>Typical annotation tables include <code>clip_plan.csv</code>, <code>audio_clip_manifest.csv</code>, <code>clip_annotations_range.csv</code>, <code>clip_timeline.csv</code>, <code>clip_gcode.csv</code>, and <code>clip_telemetry.csv</code>. Filenames and column names are part of their respective schemas; printer labels are values of <code>printer_id</code>.</p>
+<p>The <code>all</code> group retains audio before and after selected printing activity. Excluding an interval from <code>clipped</code> does not remove it from the continuous recording. A video used for explanatory review is separate from the curated audio dataset.</p></main>
+<footer><a href="https://github.com/LUDO-Lab-Research/ASD3DP-DG">ASD3DP-DG on GitHub</a></footer>
+</body>
+</html>

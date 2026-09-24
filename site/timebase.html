@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ASD3DP-DG public dataset guide">
+<title>Time coordinates · ASD3DP-DG</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><a class="brand" href="index.html">ASD3DP-DG</a><nav aria-label="Guide"><a href="index.html">Overview</a><a href="collection.html">Collection</a><a href="layout.html">Files</a><a href="timebase.html" aria-current="page">Time coordinates</a><a href="selection.html">Clip selection</a><a href="annotations.html">Annotations</a><a href="schemas.html">Schemas</a><a href="fields.html">Field dictionary</a><a href="verification.html">Verification</a><a href="limits.html">Limitations</a><a href="download.html">Downloads</a></nav></header>
+<main id="content"><h1 id="time-coordinates">Time coordinates</h1>
+<p>A shared recorder frame coordinate connects the four channels. Let <code>F</code> be the first source frame stored in a WAV, <code>B</code> the recording-start boundary frame, and <code>S</code> the start frame of a selected clip. At 48,000 frames per second:</p>
+<pre><code class="language-text">WAV frame              = source_frame - F
+WAV seconds            = (source_frame - F) / 48000
+recording-relative sec = (source_frame - B) / 48000
+clip-relative seconds  = (source_frame - S) / 48000
+</code></pre>
+<p>Pre-roll can make <code>F</code> and <code>B</code> different. Convert timestamps to the same origin before deciding that two intervals disagree. An interval end marked <code>exclusive</code> is the first frame outside that interval.</p>
+<h2 id="command-observations-and-corrected-time">Command observations and corrected time</h2>
+<p>Recorder cursors around printer-status queries provide observation brackets. They describe when the host observed a command or state, rather than an exact motor or sound-onset time. Source audio and directly observed events retain their original coordinates.</p>
+<p>To connect commands to recorded sound, the dataset uses an observed end-of-print reference. Let <code>[C_L,C_U]</code> be the ending command bracket and <code>[O_L,O_U]</code> the observed ending range; let <code>O</code> be the selected observed point. Then:</p>
+<pre><code class="language-text">C   = floor((C_L + C_U) / 2)
+D   = O - C
+D_L = O_L - C_U
+D_U = O_U - C_L
+corrected_command_frame = raw_command_frame + D
+</code></pre>
+<p>The selected point shifts command annotations for display. Bounds <code>D_L</code> and <code>D_U</code> support conservative admission of command-derived activity. Source WAV samples, video, telemetry observations, RMS events, and the fixed recording-start clip grid do not move. This session-level correction does not measure the execution time of every command.</p>
+<p>The released timeline retains original command observations and corrected ranges. See <a href="annotations.html">Annotation layers</a> before combining them with audio-derived or telemetry-derived intervals.</p></main>
+<footer><a href="https://github.com/LUDO-Lab-Research/ASD3DP-DG">ASD3DP-DG on GitHub</a></footer>
+</body>
+</html>

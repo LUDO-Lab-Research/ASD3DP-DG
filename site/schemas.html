@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ASD3DP-DG public dataset guide">
+<title>Schemas · ASD3DP-DG</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><a class="brand" href="index.html">ASD3DP-DG</a><nav aria-label="Guide"><a href="index.html">Overview</a><a href="collection.html">Collection</a><a href="layout.html">Files</a><a href="timebase.html">Time coordinates</a><a href="selection.html">Clip selection</a><a href="annotations.html">Annotations</a><a href="schemas.html" aria-current="page">Schemas</a><a href="fields.html">Field dictionary</a><a href="verification.html">Verification</a><a href="limits.html">Limitations</a><a href="download.html">Downloads</a></nav></header>
+<main id="content"><h1 id="schema-and-field-names">Schema and field names</h1>
+<p>The public labeling change affects printer identity values. It does not rename <code>printer_id</code>, other CSV columns, JSON keys, tables, or schema definitions. Printer A/B/C identify builds; Belt A/B identify components in each build.</p>
+<table>
+<thead>
+<tr>
+<th>Field or table</th>
+<th>Read it as</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>printer_id</code></td>
+<td>Public printer build label A, B, or C</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>Session identifier; join with the supplied session mapping where needed</td>
+</tr>
+<tr>
+<td><code>clip_uid</code></td>
+<td>Temporal clip identifier shared by its four channel files</td>
+</tr>
+<tr>
+<td><code>channel</code></td>
+<td>One microphone view, CH1 through CH4</td>
+</tr>
+<tr>
+<td><code>start_source_frame</code>, <code>end_source_frame_exclusive</code></td>
+<td>Half-open interval in recorder frames</td>
+</tr>
+<tr>
+<td><code>clip_annotations_range.csv</code></td>
+<td>Intersections of clip windows and source ranges</td>
+</tr>
+<tr>
+<td><code>clip_timeline.csv</code></td>
+<td>Original and corrected command-time views</td>
+</tr>
+</tbody>
+</table>
+<p>Interpret a field using its table, row grain, units, and time origin. An identically named <code>start_seconds</code> value can have a different origin in a session table and a clip table. Source observation brackets are not exact acoustic onset times.</p>
+<p>Missing keys, empty CSV cells, the string <code>unknown</code>, and numeric zero have different meanings. Do not infer a reviewed label from a planned condition, or infer a fixed interval from a free-form note. Use the schema files and headers shipped with the verified dataset for exact field sets and enums.</p>
+<p>For the detailed 28-schema, 393-field dictionary, see <a href="fields.html">Complete field dictionary</a>. Its status labels distinguish stored formats, implemented conditional outputs, and specifications.</p></main>
+<footer><a href="https://github.com/LUDO-Lab-Research/ASD3DP-DG">ASD3DP-DG on GitHub</a></footer>
+</body>
+</html>
