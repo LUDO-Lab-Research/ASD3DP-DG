@@ -14,4 +14,12 @@ printer-only rotations are retained separately.
 
 ## Citation
 
-If you use ASD3DP-DG, cite the dataset with the supplied [BibTeX entry](CITATION.bib). GitHub's citation menu uses [CITATION.cff](CITATION.cff). A persistent dataset identifier can be added when one is assigned.
+```bibtex
+@misc{kim2026asd3dpdg,
+  title        = {{ASD3DP-DG}: A Controlled Multi-Printer Dataset for Anomalous Sound Detection under Domain Shift},
+  author       = {Kim, JeongSik and Sung, JongWoo and Bae, HyeonJun and Kim, BoRyeon and Lee, JiAn},
+  year         = {2026},
+  publisher    = {LUDO Lab},
+  url          = {https://github.com/LUDO-Lab-Research/ASD3DP-DG}
+}
+```
