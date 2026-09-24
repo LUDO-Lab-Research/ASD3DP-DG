@@ -10,7 +10,7 @@ ASD3DP-DG extends [ASD3DP](https://github.com/LUDO-Lab-Research/ASD3DP) with rec
 | Selected 10-second intervals | 11,861 |
 | Mono channel views of selected intervals | 47,444 |
 
-These counts describe the selected collection before any benchmark subsampling. The complete public download is being prepared; see [Downloads](download.md) for availability. The underlying files and checksums will be linked only after the final archive has been verified.
+These counts describe the selected collection before any benchmark subsampling. The [dataset on Google Drive](https://drive.google.com/drive/folders/1dABXcAjs-b6dA5qjiMSdtwvO69cFOt2g) contains the audio, annotations, evidence, and checksums; see [Downloads](download.md).
 
 ## Read the guide
 

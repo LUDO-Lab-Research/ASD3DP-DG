@@ -33,7 +33,7 @@
 </tr>
 </tbody>
 </table>
-<p>The final archive names, part counts, checksums, and download location will appear on <a href="download.html">Downloads</a> after packaging and remote verification. A split archive part is only one piece of its group; all parts of a group are needed for extraction.</p>
+<p>The <a href="download.html">Downloads</a> page links the Google Drive folder and describes the session archives. Each audio archive can be extracted independently; use the top-level <code>SHA256SUMS</code> to check its bytes first.</p>
 <h2 id="file-relationships">File relationships</h2>
 <p>A recording session provides one four-channel source WAV. A selected temporal clip refers to one source-frame interval and has four corresponding mono WAVs. Use the clip plan and audio manifest to join clip IDs to source intervals, channel paths, and hashes. Use session annotation tables for printer/build and collection condition, and range tables for activity within a clip.</p>
 <p>Typical annotation tables include <code>clip_plan.csv</code>, <code>audio_clip_manifest.csv</code>, <code>clip_annotations_range.csv</code>, <code>clip_timeline.csv</code>, <code>clip_gcode.csv</code>, and <code>clip_telemetry.csv</code>. Filenames and column names are part of their respective schemas; printer labels are values of <code>printer_id</code>.</p>

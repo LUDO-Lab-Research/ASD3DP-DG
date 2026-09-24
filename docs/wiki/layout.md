@@ -8,7 +8,7 @@ The public dataset is organized into three archive groups, following the distrib
 | `annotations` | Session, clip, timing, and interval tables |
 | `clipped` | Selected 10-second mono WAVs by channel |
 
-The final archive names, part counts, checksums, and download location will appear on [Downloads](download.md) after packaging and remote verification. A split archive part is only one piece of its group; all parts of a group are needed for extraction.
+The [Downloads](download.md) page links the Google Drive folder and describes the session archives. Each audio archive can be extracted independently; use the top-level `SHA256SUMS` to check its bytes first.
 
 ## File relationships
 

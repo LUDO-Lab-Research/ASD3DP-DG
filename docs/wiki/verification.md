@@ -1,6 +1,6 @@
 # Verification
 
-Verify each downloaded archive group against its published SHA-256 checksum before extraction. For split archives, gather every numbered part of a group and start extraction from the first part. The download page will provide exact filenames, checksums, and extraction commands once the public package is available.
+Verify each downloaded file against the top-level `SHA256SUMS` in the [Google Drive dataset folder](https://drive.google.com/drive/folders/1dABXcAjs-b6dA5qjiMSdtwvO69cFOt2g) before extraction. The audio files are independent session archives, so you can extract one session at a time.
 
 | Stage | Check |
 |---|---|
