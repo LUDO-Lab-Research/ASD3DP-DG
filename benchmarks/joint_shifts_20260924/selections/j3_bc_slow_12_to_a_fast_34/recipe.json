@@ -1,0 +1,73 @@
+{
+  "name": "j3_bc_slow_12_to_a_fast_34",
+  "selection_seed": 20260924,
+  "annotation_revision": "r4-20260924",
+  "source": {
+    "printers": [
+      "B",
+      "C"
+    ],
+    "speed": "slow",
+    "channels": [
+      1,
+      2
+    ]
+  },
+  "target": {
+    "printers": [
+      "A"
+    ],
+    "speed": "fast",
+    "channels": [
+      3,
+      4
+    ]
+  },
+  "train": {
+    "source_normal": 990,
+    "target_normal": 10
+  },
+  "test_per_domain": {
+    "normal": 100,
+    "anomaly": 100,
+    "each_fault_family": 25
+  },
+  "test_subtype_quotas_per_domain": {
+    "belt_tension_abnormal": {
+      "belt_a": 9,
+      "belt_b": 8,
+      "belt_a_b": 8
+    },
+    "extruder_cogging_or_no_extrusion": {
+      "extruder_cogging_or_no_extrusion": 25
+    },
+    "cooling_fan_fault": {
+      "cooling_fan_fault": 25
+    },
+    "toolhead_collision": {
+      "collision_x-min": 5,
+      "collision_x-max": 5,
+      "collision_y-max": 5,
+      "collision_x-min-y-max": 5,
+      "collision_x-max-y-max": 5
+    }
+  },
+  "normal_session_roles": {
+    "train": [
+      1,
+      2
+    ],
+    "test": [
+      3
+    ]
+  },
+  "audio_views": "Both microphone views may train on the same temporal clip; no temporal clip crosses train/test.",
+  "source_input_sha256": {
+    "DATASET_READY.json": "824e55da0851b1f0e9b35bf1b5e0efd872bbb1e3f450c1cfd27fdbf04f330c99",
+    "annotations/clip/clip_plan.csv": "618b95b9b182b1dc4230f2cbd9928a34597fe0e252adccdea0915f96221c4d2d",
+    "annotations/clip/clip_audio_manifest.csv": "541730090a712a13641d08f6aebc1aa96a772be9781650e75caddb7be6eb36fc",
+    "annotations/session/session_context.csv": "ca61ddffe293881e8199b6fc3b3a94ab494e6ce93cda8720aa4201e2fb698123",
+    "annotations/session/end_anchors.csv": "26bf61415c6ff6a59f3e4d3c5db8f1977c62ebecf5004eee603d4bc5d2f320fb"
+  },
+  "selection_sha256": "77d142d6a83b7724c6bbeec689bdf4ccb7d7e4c8c9f58c2eba76ce68afb08fb7"
+}

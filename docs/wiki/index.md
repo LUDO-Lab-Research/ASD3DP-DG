@@ -23,5 +23,6 @@ These counts describe the selected collection before any benchmark subsampling. 
 7. [Complete field dictionary](fields.md)
 8. [Verification](verification.md)
 9. [Limitations](limits.md)
+10. [Three-factor joint-shift benchmark](joint-benchmark.md)
 
 Printer A/B/C are build labels. Belt A/B identify two belts within each printer; they are a separate naming axis. CSV field names and schema keys are preserved.
