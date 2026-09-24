@@ -41,6 +41,8 @@ A completed dataset has `DATASET_READY.json` with status
 hashes, 100-epoch final-checkpoint rule, seed 13711, and the source-code hashes
 of the training/scoring baseline. It is a protocol record, not a claim that the
 new results have completed verification.
+[The run scripts](runner/README.md) record the split audit, one-seed training,
+final-checkpoint scoring, fault-family summary, and independent result check.
 
 Training and test use the same DCASE2023 Task 2 autoencoder/scoring code and
 hyperparameters as the historical baseline, with **100 epochs and one fixed
