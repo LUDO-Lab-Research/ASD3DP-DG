@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ASD3DP-DG public dataset guide">
+<title>Verification · ASD3DP-DG</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><a class="brand" href="index.html">ASD3DP-DG</a><nav aria-label="Guide"><a href="index.html">Overview</a><a href="collection.html">Collection</a><a href="layout.html">Files</a><a href="timebase.html">Time coordinates</a><a href="selection.html">Clip selection</a><a href="annotations.html">Annotations</a><a href="schemas.html">Schemas</a><a href="fields.html">Field dictionary</a><a href="verification.html" aria-current="page">Verification</a><a href="limits.html">Limitations</a><a href="download.html">Downloads</a></nav></header>
+<main id="content"><h1 id="verification">Verification</h1>
+<p>Verify each downloaded archive group against its published SHA-256 checksum before extraction. For split archives, gather every numbered part of a group and start extraction from the first part. The download page will provide exact filenames, checksums, and extraction commands once the public package is available.</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Archive</td>
+<td>File size and SHA-256 for every part; successful extraction</td>
+</tr>
+<tr>
+<td>Source audio</td>
+<td>Four-channel format, 48 kHz PCM, source manifest hashes</td>
+</tr>
+<tr>
+<td>Clip plan</td>
+<td>Ten-second grid, source-frame boundaries, selection reasons</td>
+</tr>
+<tr>
+<td>Mono audio</td>
+<td>Four channel files per selected clip; 480,000 frames per file</td>
+</tr>
+<tr>
+<td>Annotations</td>
+<td>Clip/session joins, time origin, row grain, and schema membership</td>
+</tr>
+<tr>
+<td>Public labels</td>
+<td>Printer values A/B/C across paths and annotation values</td>
+</tr>
+</tbody>
+</table>
+<p>A checksum verifies file bytes, while annotation review establishes the meaning and admissibility of a label. Both are required for a usable research dataset. See <a href="timebase.html">Time coordinates</a> before comparing session, WAV, and clip-relative intervals.</p></main>
+<footer><a href="https://github.com/LUDO-Lab-Research/ASD3DP-DG">ASD3DP-DG on GitHub</a></footer>
+</body>
+</html>

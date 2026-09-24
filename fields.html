@@ -1,0 +1,2880 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ASD3DP-DG public dataset guide">
+<title>Field dictionary · ASD3DP-DG</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><a class="brand" href="index.html">ASD3DP-DG</a><nav aria-label="Guide"><a href="index.html">Overview</a><a href="collection.html">Collection</a><a href="layout.html">Files</a><a href="timebase.html">Time coordinates</a><a href="selection.html">Clip selection</a><a href="annotations.html">Annotations</a><a href="schemas.html">Schemas</a><a href="fields.html" aria-current="page">Field dictionary</a><a href="verification.html">Verification</a><a href="limits.html">Limitations</a><a href="download.html">Downloads</a></nav></header>
+<main id="content"><h1 id="asd3dp-dg-field-dictionary">ASD3DP-DG field dictionary</h1>
+<p>Current stored annotations, executable review contracts, setup/G-code keys observed across 78 sessions, conditional/automatic candidates and final output specifications are distinguished below. Dotted names denote JSON object paths; <code>[]</code> denotes one array item. Arbitrary printer-configuration values and free-form notes are not fixed annotation sub-schemas.</p>
+<p><strong>28 schemas · 393 schema-field occurrences</strong>. Identical names may have different time origins or row grain; read the applicable table. See the <a href="schemas.html">Schema map</a>.</p>
+<h2 id="audio_clip_manifest">audio_clip_manifest</h2>
+<p>File/API: <code>bundle/clips/audio_clip_manifest.csv</code> · Row grain: <strong>clip × channel</strong> · Status: <strong>current</strong></p>
+<p>Resolve path relative to bundle/clips/. frame_count is 480000 frames in the channel WAV.</p>
+<p><strong>Join:</strong> clip_uid → clip_plan; four rows, channels 1–4, per temporal clip. Paths are relative to bundle/clips.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clip_uid</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Identifier of a shared temporal clip, common to all channels.</td>
+</tr>
+<tr>
+<td><code>channel</code></td>
+<td>DG: integer 1–4; legacy: ch1–ch4</td>
+<td>channel</td>
+<td>Microphone channel: legacy uses values such as ch1; DG uses 1–4.</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>string / source-defined</td>
+<td>path</td>
+<td>Relative artifact path interpreted from the applicable manifest.</td>
+</tr>
+<tr>
+<td><code>frame_count</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Number of frames in the target audio.</td>
+</tr>
+<tr>
+<td><code>sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of the artifact referenced by this manifest.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="clip_event_annotations">clip_event_annotations</h2>
+<p>File/API: <code>bundle/clips/clip_event_annotations.csv</code> · Row grain: <strong>clip</strong> · Status: <strong>current</strong></p>
+<p>Preserve planned values, unknown anomaly_state, needs_review and an empty fault_interval_id.</p>
+<p><strong>Join:</strong> clip_uid → the shared temporal clip in clip_plan. Shared provisional annotation without a channel column.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clip_uid</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Identifier of a shared temporal clip, common to all channels.</td>
+</tr>
+<tr>
+<td><code>condition</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Collection or reviewed condition: normal/soft-anomaly/hard-anomaly; distinguish planned from human authority.</td>
+</tr>
+<tr>
+<td><code>fault_mode</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Fault family: none or a belt/fan/extruder/collision value defined by the contract.</td>
+</tr>
+<tr>
+<td><code>anomaly_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Automatic clip-annotation anomaly state; unknown in the collection output.</td>
+</tr>
+<tr>
+<td><code>annotation_authority</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Kind of evidence used to determine or generate this value or interval.</td>
+</tr>
+<tr>
+<td><code>review_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Review state for this schema; session, clip and legacy vocabularies differ.</td>
+</tr>
+<tr>
+<td><code>fault_interval_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Original fault interval linked to this clip; empty in automatic collection tables.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="clip_gcode">clip_gcode</h2>
+<p>File/API: <code>bundle/clips/clip_gcode.csv</code> · Row grain: <strong>clip × source observation</strong> · Status: <strong>current</strong></p>
+<p>Observation-bracket/command join, not the command's actual execution interval.</p>
+<p><strong>Join:</strong> clip_uid → clip_plan; multiple source/marker brackets may join one clip. evidence_type distinguishes row kinds.</p>
+<p><strong>Time:</strong> source_frame_lower/upper are host-observed brackets. Do not directly use sample_index, line or Moonraker eventtime as WAV seconds. Units follow the registry/parent source.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clip_uid</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Identifier of a shared temporal clip, common to all channels.</td>
+</tr>
+<tr>
+<td><code>evidence_type</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Kind of G-code/marker evidence linked to the clip.</td>
+</tr>
+<tr>
+<td><code>command_order</code></td>
+<td>integer (CSV: text)</td>
+<td>index</td>
+<td>Linked command order; the current writer retains the source-line value.</td>
+</tr>
+<tr>
+<td><code>line</code></td>
+<td>integer (CSV: text)</td>
+<td>index</td>
+<td>Observed source line number.</td>
+</tr>
+<tr>
+<td><code>byte_start</code></td>
+<td>integer (CSV: text)</td>
+<td>bytes</td>
+<td>Starting byte offset of the original source line.</td>
+</tr>
+<tr>
+<td><code>byte_end_exclusive</code></td>
+<td>integer (CSV: text)</td>
+<td>bytes</td>
+<td>Exclusive ending byte offset of the original source line.</td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Retained source line or command string.</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Marker/event kind.</td>
+</tr>
+<tr>
+<td><code>phase_event</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Typed phase marker, such as PRINTING_MOTION_BEGIN/END.</td>
+</tr>
+<tr>
+<td><code>anchor_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Instrumentation anchor identifier.</td>
+</tr>
+<tr>
+<td><code>source_frame_lower</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Lower host-observed source-frame bracket bound.</td>
+</tr>
+<tr>
+<td><code>source_frame_upper</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Upper host-observed source-frame bracket bound.</td>
+</tr>
+<tr>
+<td><code>host_observed_frame_lower</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Lower bound of the host-observed source-frame bracket.</td>
+</tr>
+<tr>
+<td><code>host_observed_frame_upper</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Upper bound of the host-observed source-frame bracket.</td>
+</tr>
+<tr>
+<td><code>width_frames</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Observation bracket upper minus lower; not a physical acoustic-error bound.</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Original marker/G-code observation result.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="clip_plan">clip_plan</h2>
+<p>File/API: <code>bundle/clips/clip_plan.csv</code> · Row grain: <strong>clip</strong> · Status: <strong>current</strong></p>
+<p>start_seconds/end_seconds are recording-boundary-relative seconds. end_source_frame_exclusive is the half-open interval end.</p>
+<p><strong>Join:</strong> session_id+run_id link recorder/run evidence. clip_uid is the parent key for channel files and range tables.</p>
+<p><strong>Time:</strong> Source frames use the shared recorder coordinates. start_seconds/end_seconds are relative to recording start_boundary_frame and may differ from WAV-relative seconds by pre-roll.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clip_uid</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Identifier of a shared temporal clip, common to all channels.</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Current collector session identifier.</td>
+</tr>
+<tr>
+<td><code>run_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Execution-envelope identifier linked to the session.</td>
+</tr>
+<tr>
+<td><code>grid_index</code></td>
+<td>integer (CSV: text)</td>
+<td>index</td>
+<td>Integer index on the original fixed grid; excluded indices are not renumbered.</td>
+</tr>
+<tr>
+<td><code>start_source_frame</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Starting source frame of the interval.</td>
+</tr>
+<tr>
+<td><code>end_source_frame_exclusive</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>End of the source interval; this frame is excluded.</td>
+</tr>
+<tr>
+<td><code>start_seconds</code></td>
+<td>number (CSV: text)</td>
+<td>s</td>
+<td>Start of the interval. Interpret time origins using this file's timing_basis and session timing table.</td>
+</tr>
+<tr>
+<td><code>end_seconds</code></td>
+<td>number (CSV: text)</td>
+<td>s</td>
+<td>End of the interval. Interpret time origins using this file's timing_basis and session timing table.</td>
+</tr>
+<tr>
+<td><code>duration_seconds</code></td>
+<td>number (CSV: text)</td>
+<td>s</td>
+<td>Duration of the row interval. Interpret time origins using this file's timing_basis and session timing table.</td>
+</tr>
+<tr>
+<td><code>selection_rule</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Identifier/description of the clip-selection rule.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="clip_telemetry">clip_telemetry</h2>
+<p>File/API: <code>bundle/clips/clip_telemetry.csv</code> · Row grain: <strong>clip × telemetry sample</strong> · Status: <strong>current</strong></p>
+<p>values_json contains the registry's 14 selected values. sample_index joins raw cursor evidence.</p>
+<p><strong>Join:</strong> clip_uid → clip_plan; sample_index → raw telemetry/cursor within the same session. Never directly join sample_index across sessions.</p>
+<p><strong>Time:</strong> source_frame_lower/upper are host-observed brackets. Do not directly use sample_index, line or Moonraker eventtime as WAV seconds. Units follow the registry/parent source.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clip_uid</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Identifier of a shared temporal clip, common to all channels.</td>
+</tr>
+<tr>
+<td><code>sample_index</code></td>
+<td>integer (CSV: text)</td>
+<td>index</td>
+<td>Index joining corresponding telemetry and recorder-cursor samples.</td>
+</tr>
+<tr>
+<td><code>source_frame_lower</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Lower host-observed source-frame bracket bound.</td>
+</tr>
+<tr>
+<td><code>source_frame_upper</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Upper host-observed source-frame bracket bound.</td>
+</tr>
+<tr>
+<td><code>moonraker_eventtime</code></td>
+<td>number (CSV: text)</td>
+<td>s, source clock</td>
+<td>Original Moonraker observation clock; do not use directly as WAV-relative seconds.</td>
+</tr>
+<tr>
+<td><code>values_json</code></td>
+<td>JSON object/string as specified</td>
+<td>JSON</td>
+<td>Telemetry values by registry path serialized as JSON in a CSV cell.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="human_annotation_input">human_annotation_input</h2>
+<p>File/API: <code>human_annotation.json: annotation</code> · Row grain: <strong>session revision</strong> · Status: <strong>current</strong></p>
+<p>schema_version is asd3dp-dg-annotation-v1. All three nullable extension keys remain mandatory. Required strings other than summary/note cannot be empty.</p>
+<p><strong>Join:</strong> The stored envelope's annotation object. expected_revision belongs to the POST wrapper, not this object.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> All 21 keys are required. annotation_confidence/environment_change/operator_intervention may be null. Required strings other than summary/note cannot be empty.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema_version</code></td>
+<td>schema-specific string or integer</td>
+<td>version</td>
+<td>File/input format version; string or numeric representation depends on the schema.</td>
+</tr>
+<tr>
+<td><code>condition</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Collection or reviewed condition: normal/soft-anomaly/hard-anomaly; distinguish planned from human authority. Allowed values: hard-anomaly, normal, soft-anomaly</td>
+</tr>
+<tr>
+<td><code>fault_mode</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Fault family: none or a belt/fan/extruder/collision value defined by the contract. Allowed values: belt_tension_abnormal, cooling_fan_fault, extruder_cogging_or_no_extrusion, none, toolhead_collision</td>
+</tr>
+<tr>
+<td><code>affected_part</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Component targeted by this condition.</td>
+</tr>
+<tr>
+<td><code>fault_origin</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>How the fault arose or was applied; preserve original values such as controlled, simulated or none.</td>
+</tr>
+<tr>
+<td><code>protocol_axis</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Collection-protocol identifier.</td>
+</tr>
+<tr>
+<td><code>filament_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Filament loading/use state; do not arbitrarily replace unknown.</td>
+</tr>
+<tr>
+<td><code>speed_profile</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Session-level protocol such as slow/fast, not instantaneous velocity.</td>
+</tr>
+<tr>
+<td><code>print_outcome</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Run outcome: completed/cancelled/error/unknown. Allowed values: cancelled, completed, error, unknown</td>
+</tr>
+<tr>
+<td><code>process_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Operation phase/state, on a different axis from fault state. Allowed values: homing, idle, paused, printing_motion, terminal</td>
+</tr>
+<tr>
+<td><code>anomaly_progress_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Anomaly progression: none/candidate/active/resolved/unknown. Allowed values: active, candidate, none, resolved, unknown</td>
+</tr>
+<tr>
+<td><code>condition_source_type</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Source category for the condition decision.</td>
+</tr>
+<tr>
+<td><code>condition_summary</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Human-readable description of the condition.</td>
+</tr>
+<tr>
+<td><code>material_family</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Material family; preserve unknown where information is absent.</td>
+</tr>
+<tr>
+<td><code>reviewer_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Value identifying the reviewer.</td>
+</tr>
+<tr>
+<td><code>review_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Review state for this schema; session, clip and legacy vocabularies differ. Allowed values: accepted, rejected, reviewed, unreviewed</td>
+</tr>
+<tr>
+<td><code>operator_note</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Reviewer's explanation; empty-value rules depend on the contract.</td>
+</tr>
+<tr>
+<td><code>annotation_authority</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Kind of evidence used to determine or generate this value or interval.</td>
+</tr>
+<tr>
+<td><code>annotation_confidence</code></td>
+<td>null / JSON scalar / object / array</td>
+<td>nullable JSON</td>
+<td>Nullable confidence with its scale and meaning recorded; no universal score is imposed.</td>
+</tr>
+<tr>
+<td><code>environment_change</code></td>
+<td>null / JSON scalar / object / array</td>
+<td>nullable JSON</td>
+<td>Nullable free-form environmental-change record; no source-interval structure is implied.</td>
+</tr>
+<tr>
+<td><code>operator_intervention</code></td>
+<td>null / JSON scalar / object / array</td>
+<td>nullable JSON</td>
+<td>Nullable free-form operator-intervention record; retain evidence for the intervention time.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="human_annotation_envelope">human_annotation_envelope</h2>
+<p>File/API: <code>annotations/&lt;session&gt;/human_annotation.json</code> · Row grain: <strong>session revision</strong> · Status: <strong>current</strong></p>
+<p>schema_version is 1 for legacy notes and 2 for structured records; interpret with annotation_contract.</p>
+<p><strong>Join:</strong> session_id and run_id/hash link the source. revision/previous_revision track edits; annotation contains decision input.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema_version</code></td>
+<td>schema-specific string or integer</td>
+<td>version</td>
+<td>File/input format version; string or numeric representation depends on the schema.</td>
+</tr>
+<tr>
+<td><code>annotation_contract</code></td>
+<td>string / source-defined</td>
+<td>version</td>
+<td>Annotation contract name used by the stored envelope.</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Current collector session identifier.</td>
+</tr>
+<tr>
+<td><code>human_note</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Human note retained in a legacy or structured annotation.</td>
+</tr>
+<tr>
+<td><code>note_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Whether the human note is present or empty.</td>
+</tr>
+<tr>
+<td><code>review_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Review state for this schema; session, clip and legacy vocabularies differ.</td>
+</tr>
+<tr>
+<td><code>annotation</code></td>
+<td>JSON object/string as specified</td>
+<td>JSON</td>
+<td>Structured session-annotation object; null for a legacy note-only record.</td>
+</tr>
+<tr>
+<td><code>run_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Execution-envelope identifier linked to the session.</td>
+</tr>
+<tr>
+<td><code>run_manifest_sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of the run manifest.</td>
+</tr>
+<tr>
+<td><code>annotation_preset_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Preset identifier used for the recording plan.</td>
+</tr>
+<tr>
+<td><code>annotation_preset_revision</code></td>
+<td>schema-specific string or integer</td>
+<td>version</td>
+<td>Revision number of that preset.</td>
+</tr>
+<tr>
+<td><code>planned_annotation_sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of the planned annotation.</td>
+</tr>
+<tr>
+<td><code>planned_to_actual_corrections</code></td>
+<td>JSON object/string as specified</td>
+<td>JSON</td>
+<td>Differences between planned values and actual values saved by a person.</td>
+</tr>
+<tr>
+<td><code>planning_provenance</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Planning provenance state, such as PRESET_STAMPED/LEGACY_NO_PRESET.</td>
+</tr>
+<tr>
+<td><code>updated_unix_ns</code></td>
+<td>integer (CSV: text)</td>
+<td>ns since Unix epoch</td>
+<td>Unix-epoch timestamp of the revision save, not audio onset.</td>
+</tr>
+<tr>
+<td><code>revision</code></td>
+<td>string / source-defined</td>
+<td>version</td>
+<td>Revision identifier/hash binding the current saved values and their provenance.</td>
+</tr>
+<tr>
+<td><code>previous_revision</code></td>
+<td>string / source-defined</td>
+<td>version</td>
+<td>Previous saved revision identifier; may be null on first save.</td>
+</tr>
+<tr>
+<td><code>recorder_manifest_sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of the recorder manifest.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="clip_quality_review">clip_quality_review</h2>
+<p>File/API: <code>clip-reviews/&lt;clip&gt;/chN.json</code> · Row grain: <strong>clip × channel revision</strong> · Status: <strong>current</strong></p>
+<p>Verdict/issue vocabulary differs from session review_state. The decision is bound to this channel's bytes.</p>
+<p><strong>Join:</strong> clip_uid+channel_id identify the audio; clip_audio_sha256 binds its bytes. Also retain bundle_manifest_sha256.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema_version</code></td>
+<td>schema-specific string or integer</td>
+<td>version</td>
+<td>File/input format version; string or numeric representation depends on the schema.</td>
+</tr>
+<tr>
+<td><code>clip_uid</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Identifier of a shared temporal clip, common to all channels.</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Current collector session identifier.</td>
+</tr>
+<tr>
+<td><code>channel_id</code></td>
+<td>DG: integer 1–4; legacy: ch1–ch4</td>
+<td>channel</td>
+<td>Channel identifier; its format follows the file schema.</td>
+</tr>
+<tr>
+<td><code>reviewer_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Value identifying the reviewer.</td>
+</tr>
+<tr>
+<td><code>verdict</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Channel-quality decision: accepted/flagged.</td>
+</tr>
+<tr>
+<td><code>issues</code></td>
+<td>string / source-defined</td>
+<td>categories</td>
+<td>Channel-quality issues: clipping/sync/truncation/background_noise/other.</td>
+</tr>
+<tr>
+<td><code>note</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Note value retained from the original record.</td>
+</tr>
+<tr>
+<td><code>authority</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Evidence-record kind, such as planned/setup/human.</td>
+</tr>
+<tr>
+<td><code>clip_audio_sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of this channel's clip WAV.</td>
+</tr>
+<tr>
+<td><code>bundle_manifest_sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of the bundle manifest.</td>
+</tr>
+<tr>
+<td><code>start_source_frame</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Starting source frame of the interval.</td>
+</tr>
+<tr>
+<td><code>end_source_frame_exclusive</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>End of the source interval; this frame is excluded.</td>
+</tr>
+<tr>
+<td><code>previous_revision</code></td>
+<td>string / source-defined</td>
+<td>version</td>
+<td>Previous saved revision identifier; may be null on first save.</td>
+</tr>
+<tr>
+<td><code>updated_unix_ns</code></td>
+<td>integer (CSV: text)</td>
+<td>ns since Unix epoch</td>
+<td>Unix-epoch timestamp of the revision save, not audio onset.</td>
+</tr>
+<tr>
+<td><code>revision</code></td>
+<td>string / source-defined</td>
+<td>version</td>
+<td>Revision identifier/hash binding the current saved values and their provenance.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="clip_quality_request">clip_quality_request</h2>
+<p>File/API: <code>clip quality API request</code> · Row grain: <strong>clip × channel revision</strong> · Status: <strong>current</strong></p>
+<p>expected_revision must match. Accepted clips must have no issues.</p>
+<p><strong>Join:</strong> The URL's clip/channel and expected_revision identify the target. Do not infer the source session from the request body alone.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>expected_revision</code></td>
+<td>string / source-defined</td>
+<td>version</td>
+<td>Current revision on which the edit request is based; a mismatch causes a conflict.</td>
+</tr>
+<tr>
+<td><code>reviewer_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Value identifying the reviewer.</td>
+</tr>
+<tr>
+<td><code>verdict</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Channel-quality decision: accepted/flagged.</td>
+</tr>
+<tr>
+<td><code>issues</code></td>
+<td>string / source-defined</td>
+<td>categories</td>
+<td>Channel-quality issues: clipping/sync/truncation/background_noise/other.</td>
+</tr>
+<tr>
+<td><code>note</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Note value retained from the original record.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="planned_annotation">planned_annotation</h2>
+<p>File/API: <code>bundle/run/planned_annotation.json</code> · Row grain: <strong>session planned snapshot</strong> · Status: <strong>current</strong></p>
+<p>Defaults carry planned authority and are separate from review input.</p>
+<p><strong>Join:</strong> Frozen run snapshot. Defaults record conditions; preset/BOM/capture-hardware hashes retain planning evidence.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>annotation_preset_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Preset identifier used for the recording plan.</td>
+</tr>
+<tr>
+<td><code>annotation_preset_revision</code></td>
+<td>schema-specific string or integer</td>
+<td>version</td>
+<td>Revision number of that preset.</td>
+</tr>
+<tr>
+<td><code>authority</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Evidence-record kind, such as planned/setup/human.</td>
+</tr>
+<tr>
+<td><code>bom_sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of the BOM snapshot.</td>
+</tr>
+<tr>
+<td><code>capture_hardware_sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of the capture-hardware profile.</td>
+</tr>
+<tr>
+<td><code>defaults</code></td>
+<td>JSON object/string as specified</td>
+<td>JSON</td>
+<td>Planned annotation values copied from the preset.</td>
+</tr>
+<tr>
+<td><code>preset_sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of the preset content.</td>
+</tr>
+<tr>
+<td><code>review_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Review state for this schema; session, clip and legacy vocabularies differ.</td>
+</tr>
+<tr>
+<td><code>schema_version</code></td>
+<td>schema-specific string or integer</td>
+<td>version</td>
+<td>File/input format version; string or numeric representation depends on the schema.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="planned_defaults">planned_defaults</h2>
+<p>File/API: <code>bundle/run/planned_annotation.json: defaults</code> · Row grain: <strong>session planned snapshot</strong> · Status: <strong>current</strong></p>
+<p>Compare expected_anomaly_progress_state with the subsequent actual anomaly_progress_state.</p>
+<p><strong>Join:</strong> The planned_annotation.defaults object. Compare with human actual values; do not use directly as benchmark labels.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>affected_part</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Component targeted by this condition.</td>
+</tr>
+<tr>
+<td><code>condition</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Collection or reviewed condition: normal/soft-anomaly/hard-anomaly; distinguish planned from human authority.</td>
+</tr>
+<tr>
+<td><code>condition_summary</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Human-readable description of the condition.</td>
+</tr>
+<tr>
+<td><code>expected_anomaly_progress_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Anomaly progression expected by the planned preset, distinct from actual judgment.</td>
+</tr>
+<tr>
+<td><code>fault_mode</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Fault family: none or a belt/fan/extruder/collision value defined by the contract.</td>
+</tr>
+<tr>
+<td><code>fault_origin</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>How the fault arose or was applied; preserve original values such as controlled, simulated or none.</td>
+</tr>
+<tr>
+<td><code>filament_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Filament loading/use state; do not arbitrarily replace unknown.</td>
+</tr>
+<tr>
+<td><code>material_family</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Material family; preserve unknown where information is absent.</td>
+</tr>
+<tr>
+<td><code>protocol_axis</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Collection-protocol identifier.</td>
+</tr>
+<tr>
+<td><code>speed_profile</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Session-level protocol such as slow/fast, not instantaneous velocity.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="telemetry_values">telemetry_values</h2>
+<p>File/API: <code>telemetry_samples.jsonl: values</code> · Row grain: <strong>sample</strong> · Status: <strong>current</strong></p>
+<p>Fourteen paths read from the actual registry. Missing values are not zero.</p>
+<p><strong>Join:</strong> Dotted path keys in telemetry_sample.values; join exactly to metadata registry paths.</p>
+<p><strong>Time:</strong> source_frame_lower/upper are host-observed brackets. Do not directly use sample_index, line or Moonraker eventtime as WAV seconds. Units follow the registry/parent source.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>toolhead.position</code></td>
+<td>number array</td>
+<td>mm[3]</td>
+<td>Reported toolhead XYZ coordinates.</td>
+</tr>
+<tr>
+<td><code>toolhead.homed_axes</code></td>
+<td>string / source-defined</td>
+<td>state</td>
+<td>String of homed axes.</td>
+</tr>
+<tr>
+<td><code>motion_report.live_position</code></td>
+<td>number array</td>
+<td>mm[4]</td>
+<td>Reported live XYZE coordinates.</td>
+</tr>
+<tr>
+<td><code>motion_report.live_velocity</code></td>
+<td>number (CSV: text)</td>
+<td>mm/s</td>
+<td>Reported live head velocity.</td>
+</tr>
+<tr>
+<td><code>motion_report.live_extruder_velocity</code></td>
+<td>number (CSV: text)</td>
+<td>mm/s</td>
+<td>Reported live extruder velocity.</td>
+</tr>
+<tr>
+<td><code>extruder.temperature</code></td>
+<td>number (CSV: text)</td>
+<td>°C</td>
+<td>Extruder/nozzle temperature.</td>
+</tr>
+<tr>
+<td><code>extruder.target</code></td>
+<td>number (CSV: text)</td>
+<td>°C</td>
+<td>Extruder target temperature.</td>
+</tr>
+<tr>
+<td><code>extruder.power</code></td>
+<td>number (CSV: text)</td>
+<td>ratio</td>
+<td>Reported extruder-heater power.</td>
+</tr>
+<tr>
+<td><code>heater_bed.temperature</code></td>
+<td>number (CSV: text)</td>
+<td>°C</td>
+<td>Bed temperature reported through telemetry.</td>
+</tr>
+<tr>
+<td><code>heater_bed.target</code></td>
+<td>number (CSV: text)</td>
+<td>°C</td>
+<td>Bed target temperature.</td>
+</tr>
+<tr>
+<td><code>heater_bed.power</code></td>
+<td>number (CSV: text)</td>
+<td>ratio</td>
+<td>Reported bed-heater power.</td>
+</tr>
+<tr>
+<td><code>fan.speed</code></td>
+<td>number (CSV: text)</td>
+<td>ratio</td>
+<td>Reported fan-control ratio, not measured RPM.</td>
+</tr>
+<tr>
+<td><code>print_stats.state</code></td>
+<td>string / source-defined</td>
+<td>state</td>
+<td>Reported job state.</td>
+</tr>
+<tr>
+<td><code>virtual_sdcard.file_position</code></td>
+<td>integer (CSV: text)</td>
+<td>bytes</td>
+<td>Observed source byte cursor.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="telemetry_sample">telemetry_sample</h2>
+<p>File/API: <code>bundle/gcode/telemetry_samples.jsonl</code> · Row grain: <strong>sample</strong> · Status: <strong>current</strong></p>
+<p>Per-field units for values are defined in telemetry_values.</p>
+<p><strong>Join:</strong> Join cursor samples by sample_index within the same session. Interpret the values object with its registry.</p>
+<p><strong>Time:</strong> source_frame_lower/upper are host-observed brackets. Do not directly use sample_index, line or Moonraker eventtime as WAV seconds. Units follow the registry/parent source.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema_version</code></td>
+<td>schema-specific string or integer</td>
+<td>version</td>
+<td>File/input format version; string or numeric representation depends on the schema.</td>
+</tr>
+<tr>
+<td><code>sample_index</code></td>
+<td>integer (CSV: text)</td>
+<td>index</td>
+<td>Index joining corresponding telemetry and recorder-cursor samples.</td>
+</tr>
+<tr>
+<td><code>moonraker_eventtime</code></td>
+<td>number (CSV: text)</td>
+<td>s, source clock</td>
+<td>Original Moonraker observation clock; do not use directly as WAV-relative seconds.</td>
+</tr>
+<tr>
+<td><code>values</code></td>
+<td>JSON object/string as specified</td>
+<td>JSON</td>
+<td>Telemetry sample values keyed by registry path.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="clip_annotations_range">clip_annotations_range</h2>
+<p>File/API: <code>annotations/clip/clip_annotations_range.csv</code> · Row grain: <strong>clip × original interval</strong> · Status: <strong>specified</strong></p>
+<p>Specified final schema, absent from current collection archives. The example is documentation-only.</p>
+<p><strong>Join:</strong> session_id+clip_uid+range_kind+range_id identify an intersection row. clip_uid joins clip_plan; range_id joins the original interval.</p>
+<p><strong>Time:</strong> Retain intersection source/WAV frames and clip-relative seconds. Distinguish original observation boundaries from clipped intersections.</p>
+<p><strong>Missing values:</strong> An empty core leaves both core cells empty. Non-G-code evidence may leave source-line cells empty. Admitted human ranges require revision/hash.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clip_uid</code></td>
+<td>string</td>
+<td>identifier</td>
+<td>Identifier of a shared temporal clip, common to all channels.</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>string</td>
+<td>identifier</td>
+<td>Current collector session identifier.</td>
+</tr>
+<tr>
+<td><code>printer_id</code></td>
+<td>string</td>
+<td>identifier</td>
+<td>Physical printer/build identifier, not a fault label.</td>
+</tr>
+<tr>
+<td><code>range_id</code></td>
+<td>string</td>
+<td>identifier</td>
+<td>Original session-interval ID, retained across all intersecting clips.</td>
+</tr>
+<tr>
+<td><code>range_kind</code></td>
+<td>string</td>
+<td>category</td>
+<td>Layer: phase/process_feature/operation/belt_activity/fault/unknown. Allowed values: phase, process_feature, operation, belt_activity, fault, unknown</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td>string</td>
+<td>category</td>
+<td>Operation, phase or event label; may be distinct from a feature.</td>
+</tr>
+<tr>
+<td><code>label_original</code></td>
+<td>string</td>
+<td>text</td>
+<td>TYPE or annotation string before normalization.</td>
+</tr>
+<tr>
+<td><code>clip_relative_start_seconds</code></td>
+<td>finite number (CSV: decimal text)</td>
+<td>s</td>
+<td>Intersection-start frame minus clip-start frame, divided by sample_rate. The origin is this clip's start.</td>
+</tr>
+<tr>
+<td><code>clip_relative_end_seconds</code></td>
+<td>finite number (CSV: decimal text)</td>
+<td>s</td>
+<td>Intersection-end frame minus clip-start frame, divided by sample_rate. The ending frame is excluded.</td>
+</tr>
+<tr>
+<td><code>overlap_duration_seconds</code></td>
+<td>finite number (CSV: decimal text)</td>
+<td>s</td>
+<td>This row's intersection-frame count divided by sample_rate. Distinct from a time position or directly measured physical-fault duration.</td>
+</tr>
+<tr>
+<td><code>overlap_ratio</code></td>
+<td>finite number (CSV: decimal text)</td>
+<td>ratio</td>
+<td>Row overlap frames divided by clip frames; do not simply sum overlapping rows.</td>
+</tr>
+<tr>
+<td><code>start_source_frame</code></td>
+<td>integer (CSV: decimal text)</td>
+<td>frames</td>
+<td>Starting source frame of the intersection between the original range and this clip.</td>
+</tr>
+<tr>
+<td><code>end_source_frame_exclusive</code></td>
+<td>integer (CSV: decimal text)</td>
+<td>frames</td>
+<td>Exclusive ending source frame of the intersection between the original range and this clip.</td>
+</tr>
+<tr>
+<td><code>start_wav_frame</code></td>
+<td>integer (CSV: decimal text)</td>
+<td>frames</td>
+<td>Interval start relative to WAV frame zero.</td>
+</tr>
+<tr>
+<td><code>end_wav_frame_exclusive</code></td>
+<td>integer (CSV: decimal text)</td>
+<td>frames</td>
+<td>Exclusive interval end relative to WAV frame zero.</td>
+</tr>
+<tr>
+<td><code>start_boundary_lower_frame</code></td>
+<td>integer (CSV: decimal text)</td>
+<td>frames</td>
+<td>Lower observation bound at the source range's start.</td>
+</tr>
+<tr>
+<td><code>start_boundary_upper_frame</code></td>
+<td>integer (CSV: decimal text)</td>
+<td>frames</td>
+<td>Upper observation bound at the source range's start.</td>
+</tr>
+<tr>
+<td><code>end_boundary_lower_frame</code></td>
+<td>integer (CSV: decimal text)</td>
+<td>frames</td>
+<td>Lower observation bound at the source range's end.</td>
+</tr>
+<tr>
+<td><code>end_boundary_upper_frame</code></td>
+<td>integer (CSV: decimal text)</td>
+<td>frames</td>
+<td>Upper observation bound at the source range's end.</td>
+</tr>
+<tr>
+<td><code>core_start_source_frame</code></td>
+<td>integer (CSV: decimal text) or empty cell</td>
+<td>frames</td>
+<td>Starting frame of the clip/core intersection.</td>
+</tr>
+<tr>
+<td><code>core_end_source_frame_exclusive</code></td>
+<td>integer (CSV: decimal text) or empty cell</td>
+<td>frames</td>
+<td>Ending frame of the clip/core intersection; empty when there is no core.</td>
+</tr>
+<tr>
+<td><code>left_clipped</code></td>
+<td>boolean encoded as true/false</td>
+<td>boolean</td>
+<td>Whether the original interval was clipped at the clip's left boundary.</td>
+</tr>
+<tr>
+<td><code>right_clipped</code></td>
+<td>boolean encoded as true/false</td>
+<td>boolean</td>
+<td>Whether the original interval was clipped at the clip's right boundary.</td>
+</tr>
+<tr>
+<td><code>source_line_start</code></td>
+<td>integer (CSV: decimal text) or empty cell</td>
+<td>index</td>
+<td>Source line initiating the original interval.</td>
+</tr>
+<tr>
+<td><code>source_line_end</code></td>
+<td>integer (CSV: decimal text) or empty cell</td>
+<td>index</td>
+<td>Evidence source line for the next TYPE/end transition.</td>
+</tr>
+<tr>
+<td><code>source_artifact</code></td>
+<td>string</td>
+<td>path</td>
+<td>Evidence-artifact path relative to the release root; examples use the restored root.</td>
+</tr>
+<tr>
+<td><code>source_artifact_sha256</code></td>
+<td>string</td>
+<td>SHA-256</td>
+<td>SHA-256 of the source evidence artifact.</td>
+</tr>
+<tr>
+<td><code>annotation_authority</code></td>
+<td>string</td>
+<td>category</td>
+<td>Kind of evidence used to determine or generate this value or interval.</td>
+</tr>
+<tr>
+<td><code>review_state</code></td>
+<td>string</td>
+<td>category</td>
+<td>Review state for this schema; session, clip and legacy vocabularies differ.</td>
+</tr>
+<tr>
+<td><code>range_policy_version</code></td>
+<td>string</td>
+<td>version</td>
+<td>Version of range definition, normalization and intersection policy.</td>
+</tr>
+<tr>
+<td><code>annotation_revision</code></td>
+<td>string or empty cell</td>
+<td>version</td>
+<td>Admitted annotation revision linked to the final range; empty in automatic examples.</td>
+</tr>
+<tr>
+<td><code>annotation_sha256</code></td>
+<td>string or empty cell</td>
+<td>SHA-256</td>
+<td>SHA-256 of the admitted annotation content.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gcode_review_row">gcode_review_row</h2>
+<p>File/API: <code>bundle/gcode/gcode_review.json: rows[]</code> · Row grain: <strong>source line</strong> · Status: <strong>current</strong></p>
+<p>Union of keys observed in all gcode_review rows of the 78 selected sessions. Keys depend on observation status. UNMAPPED rows have unmapped_reason instead of bracket coordinates. Both code branches and all actual rows are checked; the reason field is included.</p>
+<p><strong>Join:</strong> The parent gcode_review_envelope supplies session/source identity for all rows. Line/byte coordinates are valid only within that source.</p>
+<p><strong>Time:</strong> source_frame_lower/upper are host-observed brackets. Do not directly use sample_index, line or Moonraker eventtime as WAV seconds. Units follow the registry/parent source.</p>
+<p><strong>Missing values:</strong> UNMAPPED rows contain unmapped_reason and omit unjoined bracket fields. Do not fill them with frame zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>acceptance_status</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Source-row review/admission state, distinct from observation status such as OBSERVED_BRACKET.</td>
+</tr>
+<tr>
+<td><code>byte_end_exclusive</code></td>
+<td>integer (CSV: text)</td>
+<td>bytes</td>
+<td>Exclusive ending byte offset of the original source line.</td>
+</tr>
+<tr>
+<td><code>byte_start</code></td>
+<td>integer (CSV: text)</td>
+<td>bytes</td>
+<td>Starting byte offset of the original source line.</td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Retained source line or command string.</td>
+</tr>
+<tr>
+<td><code>evidence_status</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Original source-row observation status, such as OBSERVED_BRACKET/UNMAPPED. Allowed values: OBSERVED_BRACKET, UNMAPPED</td>
+</tr>
+<tr>
+<td><code>left_sample_index</code></td>
+<td>integer (CSV: text)</td>
+<td>index</td>
+<td>Left cursor-sample index of the source-boundary crossing.</td>
+</tr>
+<tr>
+<td><code>line</code></td>
+<td>integer (CSV: text)</td>
+<td>index</td>
+<td>Observed source line number.</td>
+</tr>
+<tr>
+<td><code>right_sample_index</code></td>
+<td>integer (CSV: text)</td>
+<td>index</td>
+<td>Right cursor-sample index of the source-boundary crossing.</td>
+</tr>
+<tr>
+<td><code>source_boundary_byte</code></td>
+<td>integer (CSV: text)</td>
+<td>bytes</td>
+<td>Boundary byte offset of the observed source line.</td>
+</tr>
+<tr>
+<td><code>source_frame_lower</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Lower host-observed source-frame bracket bound.</td>
+</tr>
+<tr>
+<td><code>source_frame_upper</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Upper host-observed source-frame bracket bound.</td>
+</tr>
+<tr>
+<td><code>unmapped_reason</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Original reason why no bracket could be constructed for the source row. Allowed values: NO_ADJACENT_CURSOR_CROSSING, OUTSIDE_CANONICAL_AUDIO</td>
+</tr>
+<tr>
+<td><code>wav_frame_lower</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Observed lower bound relative to the first WAV frame.</td>
+</tr>
+<tr>
+<td><code>wav_frame_upper</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Observed upper bound relative to the first WAV frame.</td>
+</tr>
+<tr>
+<td><code>width_frames</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Observation bracket upper minus lower; not a physical acoustic-error bound.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="recorder_timebase">recorder_timebase</h2>
+<p>File/API: <code>bundle/session/manifest.json (timebase fields)</code> · Row grain: <strong>session timebase</strong> · Status: <strong>current</strong></p>
+<p>Time-coordinate fields used for clip reconstruction, not the complete raw-recorder manifest schema.</p>
+<p><strong>Join:</strong> Session-manifest origin/boundary fields. Subtract first_source_frame from a source frame to obtain a WAV frame.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>first_source_frame</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Source frame corresponding to the first canonical-WAV frame.</td>
+</tr>
+<tr>
+<td><code>start_boundary_frame</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Recording-start boundary and current clip-grid origin.</td>
+</tr>
+<tr>
+<td><code>frame_count</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Number of frames in the target audio.</td>
+</tr>
+<tr>
+<td><code>sample_rate</code></td>
+<td>number (CSV: text)</td>
+<td>Hz</td>
+<td>Source PCM sampling rate.</td>
+</tr>
+<tr>
+<td><code>audio_sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of canonical WAV bytes.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="package_sessions">package_sessions</h2>
+<p>File/API: <code>package/sessions.csv</code> · Row grain: <strong>session</strong> · Status: <strong>implemented-finalizer</strong></p>
+<p>Dataset-wide session aggregate generated by the finalizer.</p>
+<p><strong>Join:</strong> session_id → source WAV/archive/clip count. printer_id and domain_id identify physical printers in the current collection.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>printer_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Physical printer/build identifier, not a fault label.</td>
+</tr>
+<tr>
+<td><code>domain_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Domain identifier; currently equal to printer_id in the package.</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Current collector session identifier.</td>
+</tr>
+<tr>
+<td><code>run_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Execution-envelope identifier linked to the session.</td>
+</tr>
+<tr>
+<td><code>slot_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Collection-matrix slot identifier, distinct from actual fault truth.</td>
+</tr>
+<tr>
+<td><code>planned_condition</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Planned collection condition, not an admitted clip class.</td>
+</tr>
+<tr>
+<td><code>planned_fault_family</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Package column representing the planned fault_mode.</td>
+</tr>
+<tr>
+<td><code>speed_protocol</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Package collection-protocol value, such as slow/fast.</td>
+</tr>
+<tr>
+<td><code>canonical_duration_s</code></td>
+<td>number (CSV: text)</td>
+<td>s</td>
+<td>Original session-WAV duration, shared by all four channels.</td>
+</tr>
+<tr>
+<td><code>clip_count</code></td>
+<td>integer (CSV: text)</td>
+<td>count</td>
+<td>Temporal clip count, distinct from the number of four-channel files.</td>
+</tr>
+<tr>
+<td><code>channel_count</code></td>
+<td>integer (CSV: text)</td>
+<td>count</td>
+<td>Number of simultaneously retained channels.</td>
+</tr>
+<tr>
+<td><code>source_wav_sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of original WAV bytes.</td>
+</tr>
+<tr>
+<td><code>archive_path</code></td>
+<td>string / source-defined</td>
+<td>path</td>
+<td>Session-archive path relative to the package root.</td>
+</tr>
+<tr>
+<td><code>archive_bytes</code></td>
+<td>integer (CSV: text)</td>
+<td>bytes</td>
+<td>Complete compressed-file size.</td>
+</tr>
+<tr>
+<td><code>archive_sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of the compressed archive bytes.</td>
+</tr>
+<tr>
+<td><code>split</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Dataset split name; current collection aggregates use unassigned.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="package_clips">package_clips</h2>
+<p>File/API: <code>package/clips.csv</code> · Row grain: <strong>clip</strong> · Status: <strong>implemented-finalizer</strong></p>
+<p>start_time_s/end_time_s are WAV-relative; recording_relative_* are recording-boundary-relative.</p>
+<p><strong>Join:</strong> clip_id retains the original clip_uid value. session_id joins package_sessions; clip_id joins package_clip_files.</p>
+<p><strong>Time:</strong> start_time_s/end_time_s are WAV-relative; recording_relative_* are recording-boundary-relative. end_source_frame_exclusive excludes the final frame.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>printer_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Physical printer/build identifier, not a fault label.</td>
+</tr>
+<tr>
+<td><code>domain_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Domain identifier; currently equal to printer_id in the package.</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Current collector session identifier.</td>
+</tr>
+<tr>
+<td><code>clip_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Column name used for clip_uid in package aggregates.</td>
+</tr>
+<tr>
+<td><code>grid_index</code></td>
+<td>integer (CSV: text)</td>
+<td>index</td>
+<td>Integer index on the original fixed grid; excluded indices are not renumbered.</td>
+</tr>
+<tr>
+<td><code>start_source_frame</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Starting source frame of the interval.</td>
+</tr>
+<tr>
+<td><code>end_source_frame_exclusive</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>End of the source interval; this frame is excluded.</td>
+</tr>
+<tr>
+<td><code>start_wav_frame</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Interval start relative to WAV frame zero.</td>
+</tr>
+<tr>
+<td><code>end_wav_frame_exclusive</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Exclusive interval end relative to WAV frame zero.</td>
+</tr>
+<tr>
+<td><code>start_time_s</code></td>
+<td>number (CSV: text)</td>
+<td>s</td>
+<td>WAV-relative starting time of the package clip.</td>
+</tr>
+<tr>
+<td><code>end_time_s</code></td>
+<td>number (CSV: text)</td>
+<td>s</td>
+<td>WAV-relative ending time of the package clip.</td>
+</tr>
+<tr>
+<td><code>recording_relative_start_s</code></td>
+<td>number (CSV: text)</td>
+<td>s</td>
+<td>Clip start relative to the recording-start boundary.</td>
+</tr>
+<tr>
+<td><code>recording_relative_end_s</code></td>
+<td>number (CSV: text)</td>
+<td>s</td>
+<td>Clip end relative to the recording-start boundary.</td>
+</tr>
+<tr>
+<td><code>sample_rate</code></td>
+<td>number (CSV: text)</td>
+<td>Hz</td>
+<td>Source PCM sampling rate.</td>
+</tr>
+<tr>
+<td><code>planned_condition</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Planned collection condition, not an admitted clip class.</td>
+</tr>
+<tr>
+<td><code>planned_fault_family</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Package column representing the planned fault_mode.</td>
+</tr>
+<tr>
+<td><code>selection_rule</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Identifier/description of the clip-selection rule.</td>
+</tr>
+<tr>
+<td><code>clip_policy_version</code></td>
+<td>string / source-defined</td>
+<td>version</td>
+<td>Version of the clip-generation/selection policy.</td>
+</tr>
+<tr>
+<td><code>source_wav_sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of original WAV bytes.</td>
+</tr>
+<tr>
+<td><code>split</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Dataset split name; current collection aggregates use unassigned.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="package_clip_files">package_clip_files</h2>
+<p>File/API: <code>package/clip_files.csv</code> · Row grain: <strong>clip × channel</strong> · Status: <strong>implemented-finalizer</strong></p>
+<p>archive_path+member_path locate one channel file.</p>
+<p><strong>Join:</strong> clip_id+channel_id distinguish file rows. archive_path+member_path locate the actual file inside its archive.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>printer_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Physical printer/build identifier, not a fault label.</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Current collector session identifier.</td>
+</tr>
+<tr>
+<td><code>clip_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Column name used for clip_uid in package aggregates.</td>
+</tr>
+<tr>
+<td><code>channel_id</code></td>
+<td>DG: integer 1–4; legacy: ch1–ch4</td>
+<td>channel</td>
+<td>Channel identifier; its format follows the file schema.</td>
+</tr>
+<tr>
+<td><code>archive_path</code></td>
+<td>string / source-defined</td>
+<td>path</td>
+<td>Session-archive path relative to the package root.</td>
+</tr>
+<tr>
+<td><code>member_path</code></td>
+<td>string / source-defined</td>
+<td>path</td>
+<td>Internal path of this channel WAV relative to the transport-archive root.</td>
+</tr>
+<tr>
+<td><code>size_bytes</code></td>
+<td>integer (CSV: text)</td>
+<td>bytes</td>
+<td>Artifact size.</td>
+</tr>
+<tr>
+<td><code>sha256</code></td>
+<td>string / source-defined</td>
+<td>SHA-256</td>
+<td>SHA-256 of the artifact referenced by this manifest.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="setup_measurement_snapshot">setup_measurement_snapshot</h2>
+<p>File/API: <code>bundle/run/setup_measurement_snapshot.json</code> · Row grain: <strong>session setup snapshot; [] is one event</strong> · Status: <strong>current-observed-78</strong></p>
+<p>Recursive union of all setup-object keys in 78 production sessions; not every branch key is required in every session. Numeric arrays, such as XY pairs, are single values; [] denotes one event-array item. Fan notes are declarations, belt deltas are displacements and collision-event timing is command-based setup.</p>
+<p><strong>Join:</strong> Join through the run's session/printer identity. collision events[].event_index and belt target do not replace session-wide labels.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>belt_measurements</code></td>
+<td>object</td>
+<td>JSON</td>
+<td>Rear-tensioner displacement measurements by target belt.</td>
+</tr>
+<tr>
+<td><code>belt_measurements.belt_a</code></td>
+<td>object</td>
+<td>JSON</td>
+<td>Displacement record for the belt physically named A at the site.</td>
+</tr>
+<tr>
+<td><code>belt_measurements.belt_a.current_mm</code></td>
+<td>number</td>
+<td>mm</td>
+<td>Current rear-tensioner length entered using the same reference surface.</td>
+</tr>
+<tr>
+<td><code>belt_measurements.belt_a.delta_mm</code></td>
+<td>number</td>
+<td>mm</td>
+<td>current_mm − normal_mm; input lengths are rounded to three decimal places.</td>
+</tr>
+<tr>
+<td><code>belt_measurements.belt_a.normal_mm</code></td>
+<td>number</td>
+<td>mm</td>
+<td>Normal-state rear-tensioner length entered using the same reference surface.</td>
+</tr>
+<tr>
+<td><code>belt_measurements.belt_b</code></td>
+<td>object</td>
+<td>JSON</td>
+<td>Displacement record for the belt physically named B at the site.</td>
+</tr>
+<tr>
+<td><code>belt_measurements.belt_b.current_mm</code></td>
+<td>number</td>
+<td>mm</td>
+<td>Current rear-tensioner length entered using the same reference surface.</td>
+</tr>
+<tr>
+<td><code>belt_measurements.belt_b.delta_mm</code></td>
+<td>number</td>
+<td>mm</td>
+<td>current_mm − normal_mm; input lengths are rounded to three decimal places.</td>
+</tr>
+<tr>
+<td><code>belt_measurements.belt_b.normal_mm</code></td>
+<td>number</td>
+<td>mm</td>
+<td>Normal-state rear-tensioner length entered using the same reference surface.</td>
+</tr>
+<tr>
+<td><code>collection_mode</code></td>
+<td>string</td>
+<td>category</td>
+<td>Selected collection scope: production/debug/qualification.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest</code></td>
+<td>object</td>
+<td>JSON</td>
+<td>Registered collision-path generation manifest for this session.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.annotation_padding_frames</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>Annotation padding declared by the collision artifact; not a measured onset error.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.audio_sample_rate</code></td>
+<td>integer</td>
+<td>Hz</td>
+<td>Audio sample rate used for artifact timing calculations.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.collision_boundaries_mm</code></td>
+<td>object</td>
+<td>JSON</td>
+<td>Object containing retained X/Y collision-boundary coordinates.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.collision_boundaries_mm.x_max</code></td>
+<td>number</td>
+<td>mm</td>
+<td>Retained maximum-X collision-boundary coordinate.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.collision_boundaries_mm.x_min</code></td>
+<td>number</td>
+<td>mm</td>
+<td>Retained minimum-X collision-boundary coordinate.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.collision_boundaries_mm.y_max</code></td>
+<td>number</td>
+<td>mm</td>
+<td>Retained maximum-Y collision-boundary coordinate.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.collision_range_contract</code></td>
+<td>object</td>
+<td>JSON</td>
+<td>Interval-construction rules in the collision-path manifest.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.collision_range_contract.end</code></td>
+<td>string</td>
+<td>text</td>
+<td>Collision-interval end rule declared in the original manifest.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.collision_range_contract.padding_seconds</code></td>
+<td>number</td>
+<td>s</td>
+<td>Annotation-padding duration in the original manifest.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.collision_range_contract.physical_onset_claim</code></td>
+<td>boolean</td>
+<td>boolean</td>
+<td>Whether measured physical-contact onset is claimed; false in the candidate code.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.collision_range_contract.start</code></td>
+<td>string</td>
+<td>text</td>
+<td>Collision-interval start rule declared in the original manifest.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.direction</code></td>
+<td>string</td>
+<td>category</td>
+<td>Collision target direction: a single-axis or corner direction.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.estimated_duration_seconds</code></td>
+<td>number</td>
+<td>s</td>
+<td>Builder-estimated path duration, distinct from measured audio duration.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.event_count</code></td>
+<td>integer</td>
+<td>count</td>
+<td>Number of collision events registered in the path manifest.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events</code></td>
+<td>array</td>
+<td>JSON array</td>
+<td>List of collision-event or candidate objects; each item follows its schema.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].annotation_padding_seconds</code></td>
+<td>number</td>
+<td>s</td>
+<td>Annotation-padding duration declared for this event.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].approach_xy_mm</code></td>
+<td>array</td>
+<td>mm[2]</td>
+<td>X/Y coordinate pair of the collision approach position.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].axis_component_velocity_mm_s</code></td>
+<td>number</td>
+<td>mm/s</td>
+<td>Axis-component velocity of the approach path.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].collision_range_end_marker</code></td>
+<td>string</td>
+<td>identifier</td>
+<td>Marker name registered for the interval end.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].collision_range_start</code></td>
+<td>string</td>
+<td>text</td>
+<td>Artifact rule string defining the interval start.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].commanded_contact_seconds</code></td>
+<td>number</td>
+<td>s</td>
+<td>Contact duration designed into the command path, not measured contact duration.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].contact_class</code></td>
+<td>string</td>
+<td>category</td>
+<td>Protocol category for the commanded contact duration.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].corner</code></td>
+<td>string</td>
+<td>category</td>
+<td>Event corner name; preserve it separately from single-axis direction.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].direction</code></td>
+<td>string</td>
+<td>category</td>
+<td>Collision target direction: a single-axis or corner direction.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].estimated_contact_offset_seconds</code></td>
+<td>number</td>
+<td>s</td>
+<td>Command-derived estimated travel time from the approach marker to the boundary.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].event_index</code></td>
+<td>integer</td>
+<td>index</td>
+<td>Collision-event sequence number within the session path.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].marker_prefix</code></td>
+<td>string</td>
+<td>identifier</td>
+<td>Prefix identifier joining multiple markers of one collision event.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].tangent_coordinate_mm</code></td>
+<td>number</td>
+<td>mm</td>
+<td>Tangential coordinate for this single-boundary event.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].target_xy_mm</code></td>
+<td>array</td>
+<td>mm[2]</td>
+<td>X/Y target coordinate pair commanded by the collision path.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.events[].velocity_mm_s</code></td>
+<td>number</td>
+<td>mm/s</td>
+<td>Commanded path velocity for this collision event.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.gcode_sha256</code></td>
+<td>string</td>
+<td>SHA-256</td>
+<td>SHA-256 of registered collision G-code bytes.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.requested_duration_seconds</code></td>
+<td>integer</td>
+<td>s</td>
+<td>Path duration requested during artifact generation.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.schema_version</code></td>
+<td>string</td>
+<td>version</td>
+<td>File/input format version; string or numeric representation depends on the schema.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.seed</code></td>
+<td>string</td>
+<td>integer</td>
+<td>Random seed used to generate the collision path.</td>
+</tr>
+<tr>
+<td><code>collision_artifact_manifest.speed</code></td>
+<td>string</td>
+<td>category</td>
+<td>Artifact speed family: slow/fast.</td>
+</tr>
+<tr>
+<td><code>completed_unix_ns</code></td>
+<td>integer</td>
+<td>ns, Unix epoch</td>
+<td>Unix-epoch time when measurement or confirmation completed.</td>
+</tr>
+<tr>
+<td><code>evidence_sha256</code></td>
+<td>string</td>
+<td>SHA-256</td>
+<td>SHA-256 of the canonically serialized measurement object, excluding evidence_sha256 itself.</td>
+</tr>
+<tr>
+<td><code>fan_damage</code></td>
+<td>object</td>
+<td>JSON</td>
+<td>Operator-declaration object describing physical fan damage.</td>
+</tr>
+<tr>
+<td><code>fan_damage.authority</code></td>
+<td>string</td>
+<td>category</td>
+<td>Evidence-record kind, such as planned/setup/human.</td>
+</tr>
+<tr>
+<td><code>fan_damage.machine_id</code></td>
+<td>string</td>
+<td>identifier</td>
+<td>Machine identifier of the printer whose setup was recorded.</td>
+</tr>
+<tr>
+<td><code>fan_damage.note</code></td>
+<td>string</td>
+<td>text</td>
+<td>Note value retained from the original record.</td>
+</tr>
+<tr>
+<td><code>fan_damage.recorded_unix_ns</code></td>
+<td>integer</td>
+<td>ns, Unix epoch</td>
+<td>Unix-epoch time when the declaration was saved; not an audio coordinate.</td>
+</tr>
+<tr>
+<td><code>fan_damage.schema_version</code></td>
+<td>string</td>
+<td>version</td>
+<td>File/input format version; string or numeric representation depends on the schema.</td>
+</tr>
+<tr>
+<td><code>input_source</code></td>
+<td>string</td>
+<td>category</td>
+<td>Source of this setup input, such as operator_measurement.</td>
+</tr>
+<tr>
+<td><code>interpretation</code></td>
+<td>string</td>
+<td>text</td>
+<td>Scope and limitations of the measurement supported by this setup evidence.</td>
+</tr>
+<tr>
+<td><code>machine_id</code></td>
+<td>string</td>
+<td>identifier</td>
+<td>Machine identifier of the printer whose setup was recorded.</td>
+</tr>
+<tr>
+<td><code>measurement_id</code></td>
+<td>string</td>
+<td>identifier</td>
+<td>Original setup measurement/confirmation record identifier.</td>
+</tr>
+<tr>
+<td><code>measurement_type</code></td>
+<td>string</td>
+<td>category</td>
+<td>Applied measurement method, such as rear_tensioner_displacement.</td>
+</tr>
+<tr>
+<td><code>operator_confirmed</code></td>
+<td>boolean</td>
+<td>boolean</td>
+<td>Whether the operator confirmed this measurement.</td>
+</tr>
+<tr>
+<td><code>production_credit</code></td>
+<td>boolean</td>
+<td>boolean</td>
+<td>Recorded eligibility for counting as a production session.</td>
+</tr>
+<tr>
+<td><code>recording_tag</code></td>
+<td>string</td>
+<td>text</td>
+<td>Original tag assigned to the recording workflow.</td>
+</tr>
+<tr>
+<td><code>schema_version</code></td>
+<td>string</td>
+<td>version</td>
+<td>File/input format version; string or numeric representation depends on the schema.</td>
+</tr>
+<tr>
+<td><code>target</code></td>
+<td>string</td>
+<td>category</td>
+<td>Displacement-measurement target: belt_a/belt_b/belt_a_b.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="collision_rms_response">collision_rms_response</h2>
+<p>For clip selection, see <a href="selection.html">Clip selection</a>. The stored gap parameter is 0.750 s; conversion to 20 ms bins uses round(37.5)=38, so the executed maximum inactive gap is 0.760 s. The 50 ms padding is display-only; admission uses event cores.</p>
+<p>File/API: <code>GET /debug/review/&lt;session_id&gt;/collision-rms.json</code> · Row grain: <strong>session response; events[] is one automatic candidate</strong> · Status: <strong>implemented-review-only</strong></p>
+<p>Response computed on demand by the review API, not a stored CSV in the 78 archives. Core spans include gaps joined by the maximum-gap rule and may differ from active_bin_count × bin_seconds. physical_onset_claim=false; this is an automatic candidate rather than a final fault label.</p>
+<p><strong>Join:</strong> Response session_id links the source. events[].marker_prefix/event_index identify automatic search events.</p>
+<p><strong>Time:</strong> Source frames use the shared recorder coordinates. start_seconds/end_seconds are relative to recording start_boundary_frame and may differ from WAV-relative seconds by pre-roll.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema_version</code></td>
+<td>schema-specific string or integer</td>
+<td>version</td>
+<td>File/input format version; string or numeric representation depends on the schema.</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Current collector session identifier.</td>
+</tr>
+<tr>
+<td><code>sample_rate</code></td>
+<td>number (CSV: text)</td>
+<td>Hz</td>
+<td>Source PCM sampling rate.</td>
+</tr>
+<tr>
+<td><code>time_axis</code></td>
+<td>string</td>
+<td>category</td>
+<td>Coordinate system used by RMS candidates: recorder_source_frames.</td>
+</tr>
+<tr>
+<td><code>authority</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Evidence-record kind, such as planned/setup/human.</td>
+</tr>
+<tr>
+<td><code>review_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Review state for this schema; session, clip and legacy vocabularies differ.</td>
+</tr>
+<tr>
+<td><code>physical_onset_claim</code></td>
+<td>boolean</td>
+<td>boolean</td>
+<td>Whether measured physical-contact onset is claimed; false in the candidate code.</td>
+</tr>
+<tr>
+<td><code>source_audio_location</code></td>
+<td>string</td>
+<td>category</td>
+<td>Storage-location kind of the canonical audio read for collision candidates.</td>
+</tr>
+<tr>
+<td><code>source_manifest_location</code></td>
+<td>string</td>
+<td>category</td>
+<td>Storage-location kind of the recorder manifest read for candidates.</td>
+</tr>
+<tr>
+<td><code>method</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Calculation/mapping method.</td>
+</tr>
+<tr>
+<td><code>method.bin_seconds</code></td>
+<td>number</td>
+<td>s</td>
+<td>RMS bin duration; currently 0.020 seconds.</td>
+</tr>
+<tr>
+<td><code>method.channel_aggregation</code></td>
+<td>string</td>
+<td>category</td>
+<td>Median aggregation of four-channel RMS dBFS for each bin.</td>
+</tr>
+<tr>
+<td><code>method.threshold</code></td>
+<td>string</td>
+<td>category</td>
+<td>Threshold construction: a fixed dB rise above the search-gate median.</td>
+</tr>
+<tr>
+<td><code>method.threshold_rise_db</code></td>
+<td>number</td>
+<td>dB</td>
+<td>RMS threshold rise above the gate median; currently 12 dB.</td>
+</tr>
+<tr>
+<td><code>method.maximum_join_gap_seconds</code></td>
+<td>number</td>
+<td>s</td>
+<td>Declared join parameter 0.750 s; executed as round(0.750/0.020)=38 bins, allowing 0.760 s of inactive bins.</td>
+</tr>
+<tr>
+<td><code>method.minimum_active_seconds</code></td>
+<td>number</td>
+<td>s</td>
+<td>Total active-bin duration required in a candidate group; currently 0.080 seconds.</td>
+</tr>
+<tr>
+<td><code>method.display_padding_seconds</code></td>
+<td>number</td>
+<td>s</td>
+<td>Time added before/after the candidate core for display; currently 0.050 seconds.</td>
+</tr>
+<tr>
+<td><code>method.search_gate</code></td>
+<td>string</td>
+<td>text</td>
+<td>Construction of candidate search gates from G-code markers.</td>
+</tr>
+<tr>
+<td><code>source_event_count</code></td>
+<td>integer</td>
+<td>count</td>
+<td>Number of searchable G-code gates.</td>
+</tr>
+<tr>
+<td><code>candidate_count</code></td>
+<td>integer</td>
+<td>count</td>
+<td>Number of returned candidates satisfying RMS criteria.</td>
+</tr>
+<tr>
+<td><code>rejected_event_count</code></td>
+<td>integer</td>
+<td>count</td>
+<td>Search-gate count minus candidate count; not a human rejection decision.</td>
+</tr>
+<tr>
+<td><code>events</code></td>
+<td>array</td>
+<td>JSON array</td>
+<td>List of collision-event or candidate objects; each item follows its schema.</td>
+</tr>
+<tr>
+<td><code>events[].marker_prefix</code></td>
+<td>string</td>
+<td>identifier</td>
+<td>Prefix identifier joining multiple markers of one collision event.</td>
+</tr>
+<tr>
+<td><code>events[].direction</code></td>
+<td>string</td>
+<td>category</td>
+<td>Collision target direction: a single-axis or corner direction.</td>
+</tr>
+<tr>
+<td><code>events[].event_index</code></td>
+<td>integer</td>
+<td>index</td>
+<td>Collision-event sequence number within the session path.</td>
+</tr>
+<tr>
+<td><code>events[].line</code></td>
+<td>integer</td>
+<td>index</td>
+<td>Observed source line number.</td>
+</tr>
+<tr>
+<td><code>events[].estimated_contact_source_frame_lower</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>Lower contact-frame estimate from commanded velocity and approach distance.</td>
+</tr>
+<tr>
+<td><code>events[].estimated_contact_source_frame_upper</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>Upper contact-frame estimate from commanded velocity and approach distance.</td>
+</tr>
+<tr>
+<td><code>events[].search_source_frame_lower</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>Original G-code search-gate start frame; RMS reads are constrained by WAV/recording bounds.</td>
+</tr>
+<tr>
+<td><code>events[].search_source_frame_upper</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>Original G-code search-gate end frame; RMS reads are constrained by WAV/recording bounds.</td>
+</tr>
+<tr>
+<td><code>events[].command</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Retained source line or command string.</td>
+</tr>
+<tr>
+<td><code>events[].range_kind</code></td>
+<td>string</td>
+<td>category</td>
+<td>collision-rms-candidate, distinct from an admitted fault interval.</td>
+</tr>
+<tr>
+<td><code>events[].source_frame_lower</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>Display interval start after 50 ms padding, clamped to the RMS search gate; not the unpadded event core.</td>
+</tr>
+<tr>
+<td><code>events[].source_frame_upper</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>Display interval exclusive end after 50 ms padding, clamped to the RMS search gate.</td>
+</tr>
+<tr>
+<td><code>events[].core_source_frame_lower</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>Start frame of the selected group's first active bin.</td>
+</tr>
+<tr>
+<td><code>events[].core_source_frame_upper</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>End frame of the selected group's last active bin; internal gaps may be included.</td>
+</tr>
+<tr>
+<td><code>events[].start_seconds</code></td>
+<td>number</td>
+<td>s, recording-relative</td>
+<td>Padded RMS-candidate start in recording-boundary-relative seconds.</td>
+</tr>
+<tr>
+<td><code>events[].end_seconds</code></td>
+<td>number</td>
+<td>s, recording-relative</td>
+<td>Padded RMS-candidate end in recording-boundary-relative seconds.</td>
+</tr>
+<tr>
+<td><code>events[].core_start_seconds</code></td>
+<td>number</td>
+<td>s, recording-relative</td>
+<td>Core start in seconds relative to recording start_boundary_frame.</td>
+</tr>
+<tr>
+<td><code>events[].core_end_seconds</code></td>
+<td>number</td>
+<td>s, recording-relative</td>
+<td>Core end in seconds relative to recording start_boundary_frame.</td>
+</tr>
+<tr>
+<td><code>events[].search_start_seconds</code></td>
+<td>number</td>
+<td>s, recording-relative</td>
+<td>Actual clipped search start in recording-relative seconds.</td>
+</tr>
+<tr>
+<td><code>events[].search_end_seconds</code></td>
+<td>number</td>
+<td>s, recording-relative</td>
+<td>Actual clipped search upper bound in recording-relative seconds; the final incomplete bin is excluded.</td>
+</tr>
+<tr>
+<td><code>events[].baseline_dbfs</code></td>
+<td>number</td>
+<td>dBFS</td>
+<td>Median bin score within the gate; based on dBFS, not calibrated SPL.</td>
+</tr>
+<tr>
+<td><code>events[].threshold_dbfs</code></td>
+<td>number</td>
+<td>dBFS</td>
+<td>baseline_dbfs + threshold_rise_db.</td>
+</tr>
+<tr>
+<td><code>events[].peak_dbfs</code></td>
+<td>number</td>
+<td>dBFS</td>
+<td>Maximum bin score of the selected group, not the waveform sample peak.</td>
+</tr>
+<tr>
+<td><code>events[].active_bin_count</code></td>
+<td>integer</td>
+<td>count</td>
+<td>Number of selected-group bins at or above threshold; gap bins are excluded.</td>
+</tr>
+<tr>
+<td><code>events[].qualified_group_count</code></td>
+<td>integer</td>
+<td>count</td>
+<td>Number of groups satisfying the minimum active-bin count.</td>
+</tr>
+<tr>
+<td><code>events[].annotation_authority</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Kind of evidence used to determine or generate this value or interval.</td>
+</tr>
+<tr>
+<td><code>events[].review_state</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Review state for this schema; session, clip and legacy vocabularies differ.</td>
+</tr>
+<tr>
+<td><code>events[].physical_onset_claim</code></td>
+<td>boolean</td>
+<td>boolean</td>
+<td>Whether measured physical-contact onset is claimed; false in the candidate code.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fan_pwm_ranges">fan_pwm_ranges</h2>
+<p>File/API: <code>bundle/clips/fan_pwm_ranges.csv</code> · Row grain: <strong>clip × affected source fan command</strong> · Status: <strong>implemented-conditional</strong></p>
+<p>Conditional output for fan-control paths, absent from the current 78 member inventories. Physical blade damage is not a PWM transformation. Source coordinates describe original command ranges intersecting clips, rather than already clipped coordinates.</p>
+<p><strong>Join:</strong> clip_uid → clip_plan; source_line identifies the original fan-source command. Multiple clips may reference the same original range.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clip_uid</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Identifier of a shared temporal clip, common to all channels.</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td>string</td>
+<td>category</td>
+<td>Original fan-control transformation mode, distinct from physical damage in this collection.</td>
+</tr>
+<tr>
+<td><code>source_line</code></td>
+<td>string</td>
+<td>line number</td>
+<td>Original G-code line number projected into a fan interval.</td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Retained source line or command string.</td>
+</tr>
+<tr>
+<td><code>start_source_frame</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Starting source frame of the interval.</td>
+</tr>
+<tr>
+<td><code>end_source_frame_exclusive</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>End of the source interval; this frame is excluded.</td>
+</tr>
+<tr>
+<td><code>mapping</code></td>
+<td>string</td>
+<td>category</td>
+<td>Host-observed interval mapping from a fan-source command to the next fan command.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fan_pwm_range_manifest">fan_pwm_range_manifest</h2>
+<p>File/API: <code>bundle/clips/fan_pwm_range_manifest.json</code> · Row grain: <strong>session fan command projection</strong> · Status: <strong>implemented-conditional</strong></p>
+<p>Conditional output for fan-control paths, absent from the current 78 member inventories. Physical blade damage is not a PWM transformation. Source coordinates describe original command ranges intersecting clips, rather than already clipped coordinates.</p>
+<p><strong>Join:</strong> Mode and mapping-coverage summary for this session's fan_pwm_ranges.csv.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema_version</code></td>
+<td>schema-specific string or integer</td>
+<td>version</td>
+<td>File/input format version; string or numeric representation depends on the schema.</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td>string</td>
+<td>category</td>
+<td>Original fan-control transformation mode, distinct from physical damage in this collection.</td>
+</tr>
+<tr>
+<td><code>affected_command_count</code></td>
+<td>string</td>
+<td>count</td>
+<td>Number of source commands affected by the fan transformation.</td>
+</tr>
+<tr>
+<td><code>mapped_command_count</code></td>
+<td>string</td>
+<td>count</td>
+<td>Number of fan commands with observation brackets suitable for range construction.</td>
+</tr>
+<tr>
+<td><code>unmapped_command_count</code></td>
+<td>string</td>
+<td>count</td>
+<td>affected_command_count − mapped_command_count.</td>
+</tr>
+<tr>
+<td><code>range_rule</code></td>
+<td>string</td>
+<td>text</td>
+<td>Annotation interval rule declared in fan-control settings.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="human_annotation_request">human_annotation_request</h2>
+<p>File/API: <code>POST session annotation: structured request</code> · Row grain: <strong>session revision request</strong> · Status: <strong>current</strong></p>
+<p>expected_revision is null on first save and the existing revision string on edit. Mixing or adding keys from the two request forms is rejected by the current API.</p>
+<p><strong>Join:</strong> URL session + expected_revision fix the edit target; annotation follows human_annotation_input.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>annotation</code></td>
+<td>JSON object/string as specified</td>
+<td>JSON</td>
+<td>Structured session-annotation object; null for a legacy note-only record.</td>
+</tr>
+<tr>
+<td><code>expected_revision</code></td>
+<td>string / source-defined</td>
+<td>version</td>
+<td>Current revision on which the edit request is based; a mismatch causes a conflict.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="human_note_request">human_note_request</h2>
+<p>File/API: <code>POST session annotation: legacy request</code> · Row grain: <strong>session note revision request</strong> · Status: <strong>current</strong></p>
+<p>expected_revision is null on first save and the existing revision string on edit. Mixing or adding keys from the two request forms is rejected by the current API.</p>
+<p><strong>Join:</strong> URL session + expected_revision fix the edit target; distinguish note-only history from structured decisions.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>human_note</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Human note retained in a legacy or structured annotation.</td>
+</tr>
+<tr>
+<td><code>expected_revision</code></td>
+<td>string / source-defined</td>
+<td>version</td>
+<td>Current revision on which the edit request is based; a mismatch causes a conflict.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gcode_review_envelope">gcode_review_envelope</h2>
+<p>File/API: <code>bundle/gcode/gcode_review.json</code> · Row grain: <strong>session G-code observation artifact</strong> · Status: <strong>current</strong></p>
+<p>Rows contain per-line evidence; this wrapper fixes exact source bytes and audio coordinates. The display-range start is distinct from the first WAV frame. Anchor finalization adds anchor_ranges/anchor_event_count. All 78 inputs have empty anchor_ranges, so mapping_claim alone does not establish individual G1 anchor evidence.</p>
+<p><strong>Join:</strong> session_id joins the recorder manifest; source_sha256 joins retained source bytes; rows follow gcode_review_row.</p>
+<p><strong>Time:</strong> source_frame_lower/upper are host-observed brackets. Do not directly use sample_index, line or Moonraker eventtime as WAV seconds. Units follow the registry/parent source.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema_version</code></td>
+<td>schema-specific string or integer</td>
+<td>version</td>
+<td>File/input format version; string or numeric representation depends on the schema.</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Current collector session identifier.</td>
+</tr>
+<tr>
+<td><code>source_sha256</code></td>
+<td>string</td>
+<td>SHA-256</td>
+<td>SHA-256 of the exact instrumented source bytes referenced by the G-code review.</td>
+</tr>
+<tr>
+<td><code>source_size</code></td>
+<td>integer</td>
+<td>bytes</td>
+<td>Complete byte count of the retained instrumented G-code source.</td>
+</tr>
+<tr>
+<td><code>sample_rate</code></td>
+<td>number (CSV: text)</td>
+<td>Hz</td>
+<td>Source PCM sampling rate.</td>
+</tr>
+<tr>
+<td><code>audio_first_source_frame</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>First source frame of the canonical WAV referenced by this G-code review.</td>
+</tr>
+<tr>
+<td><code>audio_last_source_frame_exclusive</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>Exclusive source-frame end of the canonical WAV referenced by this G-code review.</td>
+</tr>
+<tr>
+<td><code>mapping_claim</code></td>
+<td>string</td>
+<td>category</td>
+<td>Claim describing source observation: HOST_OBSERVED_SOURCE_CURSOR_FRAME_BRACKETS_ONLY or MOONRAKER_G1_START_END_AUDIO_FRAME_BRACKETS; verify actual rows/anchor_ranges separately. Allowed values: HOST_OBSERVED_SOURCE_CURSOR_FRAME_BRACKETS_ONLY, MOONRAKER_G1_START_END_AUDIO_FRAME_BRACKETS</td>
+</tr>
+<tr>
+<td><code>point_interpolation</code></td>
+<td>boolean</td>
+<td>boolean</td>
+<td>False: the current G-code review does not interpolate a single point time.</td>
+</tr>
+<tr>
+<td><code>rows</code></td>
+<td>array</td>
+<td>JSON array</td>
+<td>Per-source-line G-code observation records, each following gcode_review_row.</td>
+</tr>
+<tr>
+<td><code>anchor_ranges</code></td>
+<td>array</td>
+<td>JSON array</td>
+<td>Ranges between START/END markers of original G1 commands; observed empty in all 78 current inputs.</td>
+</tr>
+<tr>
+<td><code>anchor_event_count</code></td>
+<td>integer</td>
+<td>count</td>
+<td>Number of marker events supplied to range construction, distinct from the count of nonempty anchor ranges.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="planned_to_actual_correction">planned_to_actual_correction</h2>
+<p>File/API: <code>human_annotation.json: planned_to_actual_corrections.&lt;field&gt;</code> · Row grain: <strong>changed annotation field in one session revision</strong> · Status: <strong>current</strong></p>
+<p>Value structure in a map keyed by changed field names. Compare expected_anomaly_progress_state with actual anomaly_progress_state. Unchanged fields are absent; source planned values are not overwritten.</p>
+<p><strong>Join:</strong> Entry in the parent envelope's changed-field map: the key identifies the field, and the value pairs planned and actual.</p>
+<p><strong>Time:</strong> Decisions/settings without time fields inherit the linked session/clip coordinates. Updated/completed Unix times describe revision history, not audio onset.</p>
+<p><strong>Missing values:</strong> Missing keys and empty values follow the source contract. Do not convert unknown/needs_review to a normal decision or zero.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>planned</code></td>
+<td>JSON value</td>
+<td>JSON value</td>
+<td>Original planned-defaults value for the corrected field.</td>
+</tr>
+<tr>
+<td><code>actual</code></td>
+<td>JSON value</td>
+<td>JSON value</td>
+<td>Value saved in the new human annotation for that field.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gcode_anchor_range">gcode_anchor_range</h2>
+<p>File/API: <code>bundle/gcode/gcode_review.json: anchor_ranges[]</code> · Row grain: <strong>original G1 × START/END anchor pair</strong> · Status: <strong>implemented; no nonempty rows in observed 78</strong></p>
+<p>Eleven keys that build_anchor_ranges can generate. Nonempty anchor ranges are not observed in the current 78 sessions. These differ from TYPE-derived process_feature ranges.</p>
+<p><strong>Join:</strong> Join the parent session and original source line/command. anchor_id connects the instrumented START/END pair.</p>
+<p><strong>Time:</strong> possible=[START.lower,END.upper), core=[START.upper,END.lower). WAV coordinates subtract the parent's audio_first_source_frame from source frames.</p>
+<p><strong>Missing values:</strong> The generator rejects incomplete marker pairs or reversed frame order. Empty anchor_ranges means there are no individual anchor rows.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>line</code></td>
+<td>integer (CSV: text)</td>
+<td>index</td>
+<td>Observed source line number.</td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td>string / source-defined</td>
+<td>text</td>
+<td>Retained source line or command string.</td>
+</tr>
+<tr>
+<td><code>anchor_id</code></td>
+<td>string / source-defined</td>
+<td>identifier</td>
+<td>Instrumentation anchor identifier.</td>
+</tr>
+<tr>
+<td><code>evidence_status</code></td>
+<td>string / source-defined</td>
+<td>category</td>
+<td>Original source-row observation status, such as OBSERVED_BRACKET/UNMAPPED. Allowed values: ANCHOR_BRACKET</td>
+</tr>
+<tr>
+<td><code>source_frame_lower</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Lower host-observed source-frame bracket bound.</td>
+</tr>
+<tr>
+<td><code>source_frame_upper</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Upper host-observed source-frame bracket bound.</td>
+</tr>
+<tr>
+<td><code>core_source_frame_lower</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>Upper observation bound of the START marker; inner start of the anchor range.</td>
+</tr>
+<tr>
+<td><code>core_source_frame_upper</code></td>
+<td>integer</td>
+<td>frames</td>
+<td>Lower observation bound of the END marker; inner end of the anchor range.</td>
+</tr>
+<tr>
+<td><code>wav_frame_lower</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Observed lower bound relative to the first WAV frame.</td>
+</tr>
+<tr>
+<td><code>wav_frame_upper</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Observed upper bound relative to the first WAV frame.</td>
+</tr>
+<tr>
+<td><code>width_frames</code></td>
+<td>integer (CSV: text)</td>
+<td>frames</td>
+<td>Observation bracket upper minus lower; not a physical acoustic-error bound.</td>
+</tr>
+</tbody>
+</table></main>
+<footer><a href="https://github.com/LUDO-Lab-Research/ASD3DP-DG">ASD3DP-DG on GitHub</a></footer>
+</body>
+</html>

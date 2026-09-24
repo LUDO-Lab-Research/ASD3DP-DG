@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ASD3DP-DG public dataset guide">
+<title>Overview · ASD3DP-DG</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><a class="brand" href="index.html">ASD3DP-DG</a><nav aria-label="Guide"><a href="index.html" aria-current="page">Overview</a><a href="collection.html">Collection</a><a href="layout.html">Files</a><a href="timebase.html">Time coordinates</a><a href="selection.html">Clip selection</a><a href="annotations.html">Annotations</a><a href="schemas.html">Schemas</a><a href="fields.html">Field dictionary</a><a href="verification.html">Verification</a><a href="limits.html">Limitations</a><a href="download.html">Downloads</a></nav></header>
+<main id="content"><h1 id="asd3dp-dg-dataset-guide">ASD3DP-DG Dataset Guide</h1>
+<p>ASD3DP-DG extends <a href="https://github.com/LUDO-Lab-Research/ASD3DP">ASD3DP</a> with recordings from three independently assembled 3D printers, labeled A, B, and C. It supports anomalous sound detection under differences between printer builds. The dataset contains four microphone channels per recording session.</p>
+<table>
+<thead>
+<tr>
+<th>Collection measure</th>
+<th style="text-align: right;">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Printer domains</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>Recorded sessions</td>
+<td style="text-align: right;">78</td>
+</tr>
+<tr>
+<td>Continuous audio</td>
+<td style="text-align: right;">40.05 hours</td>
+</tr>
+<tr>
+<td>Selected 10-second intervals</td>
+<td style="text-align: right;">11,861</td>
+</tr>
+<tr>
+<td>Mono channel views of selected intervals</td>
+<td style="text-align: right;">47,444</td>
+</tr>
+</tbody>
+</table>
+<p>These counts describe the selected collection before any benchmark subsampling. The complete public download is being prepared; see <a href="download.html">Downloads</a> for availability. The underlying files and checksums will be linked only after the final archive has been verified.</p>
+<h2 id="read-the-guide">Read the guide</h2>
+<ol>
+<li><a href="collection.html">Collection conditions and audio</a></li>
+<li><a href="layout.html">Folders and files</a></li>
+<li><a href="timebase.html">Time coordinates</a></li>
+<li><a href="selection.html">Clip selection</a></li>
+<li><a href="annotations.html">Annotation layers</a></li>
+<li><a href="schemas.html">Schema and field names</a></li>
+<li><a href="fields.html">Complete field dictionary</a></li>
+<li><a href="verification.html">Verification</a></li>
+<li><a href="limits.html">Limitations</a></li>
+</ol>
+<p>Printer A/B/C are build labels. Belt A/B identify two belts within each printer; they are a separate naming axis. CSV field names and schema keys are preserved.</p></main>
+<footer><a href="https://github.com/LUDO-Lab-Research/ASD3DP-DG">ASD3DP-DG on GitHub</a></footer>
+</body>
+</html>
