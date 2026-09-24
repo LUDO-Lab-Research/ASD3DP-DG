@@ -6,6 +6,8 @@ The collection contains 78 sessions, 40.05 hours of continuous audio, and 11,861
 
 The [public dataset guide](docs/wiki/index.md) describes collection, file groups, annotation basics, and download status. The complete A/B/C archive will be linked after integrity checks.
 
-The [three-factor joint-shift protocol](benchmarks/joint_shifts_20260924/README.md)
-freezes three combined printer, speed, and microphone assignments with their
-exact file selections. Earlier printer-only rotations are retained separately.
+The [three-factor joint-shift benchmark](docs/wiki/joint-benchmark.md) reports
+the completed J1–J3 printer, speed, and microphone-pair assignments. Its
+[verified per-file scores and checkpoints](benchmarks/joint_shifts_20260924/results/README.md)
+are linked to the fixed selections and independent result checks. Earlier
+printer-only rotations are retained separately.
