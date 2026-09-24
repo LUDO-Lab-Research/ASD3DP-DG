@@ -39,8 +39,9 @@ A completed dataset has `DATASET_READY.json` with status
 
 [`training_protocol.json`](training_protocol.json) freezes the three selection
 hashes, 100-epoch final-checkpoint rule, seed 13711, and the source-code hashes
-of the training/scoring baseline. It is a protocol record, not a claim that the
-new results have completed verification.
+of the training/scoring baseline. The completed [results and independently
+verified file scores](results/README.md) are published separately from this
+selection protocol.
 [The run scripts](runner/README.md) record the split audit, one-seed training,
 final-checkpoint scoring, fault-family summary, and independent result check.
 
@@ -48,7 +49,7 @@ Training and test use the same DCASE2023 Task 2 autoencoder/scoring code and
 hyperparameters as the historical baseline, with **100 epochs and one fixed
 seed (13711) per assignment**. The final epoch is scored; no test set chooses a
 checkpoint or hyperparameter. Report source/target AUC and pooled pAUC for
-MSE and Selective Mahalanobis, with fault-family breakdowns. One seed gives a
+MSE and Mahalanobis, with fault-family breakdowns. One seed gives a
 single-run result, not a variability estimate. File membership may recur
 across assignments; assignments are analyzed separately.
 

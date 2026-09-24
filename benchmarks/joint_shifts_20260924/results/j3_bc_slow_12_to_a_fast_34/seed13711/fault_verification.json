@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "input_score_sha256": "7cc974944a058eea1fa408a885c4af91ac00825755b7a984020b38be580bb3cd",
+  "normal_reference": "same 200 test-normal files for every fault scope",
+  "family_count": 4,
+  "subtype_count": 10,
+  "metric_rows": 28,
+  "pairwise_auc_check": "PASS",
+  "family_weighted_auc_equals_pooled_auc": true,
+  "model_or_threshold_selection": false
+}

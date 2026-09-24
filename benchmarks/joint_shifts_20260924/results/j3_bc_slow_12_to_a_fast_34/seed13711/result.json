@@ -1,0 +1,60 @@
+{
+  "status": "COMPLETED",
+  "seed": 13711,
+  "checkpoint_epoch": 100,
+  "device": "cpu",
+  "dataset_root": "/home/dori/datasets/asd3dp-dg-joint/j3_bc_slow_12_to_a_fast_34",
+  "audit_path": "/home/dori/study/asd3dp-dg/runs/24_asd3dp_dg_joint_shifts_h100_20260924/evaluation/j3_bc_slow_12_to_a_fast_34/audit.json",
+  "audit_sha256": "d35385f4209bcc9f33319e744cd2d15dbc7b4d0786fd742b2fb5a527ccb2d6c0",
+  "model_sha256": "89799a0e06ca966e5c2501aa65d38ab42292fa9157d42382281cec84291f0438",
+  "training_args_sha256": "606e025a236fb7b0242124cd99a4722837c763797dfa3be945eb97213ec389ec",
+  "test_selection_sha256": "9b757248a38831a0b7a0923bbd781d58c1dd44b3a0995ddeaa72ce0e4c4679a9",
+  "file_scores_sha256": "7cc974944a058eea1fa408a885c4af91ac00825755b7a984020b38be580bb3cd",
+  "evaluation_script_sha256": "7e50600cff39b923d9a1503921671fc28ca13130fe2794d65c041eb3bcd65fda",
+  "score_implementation": "pinned upstream DCASE2023T2AE.eval, with source file_to_vectors and calc_inv_cov",
+  "test_files": 400,
+  "thresholds": {
+    "MSE": 14.26483055241609,
+    "MAHALA": 0.11618550520413322
+  },
+  "training_or_model_selection_performed": false,
+  "metric_independent_pairwise_auc_check": "PASS",
+  "metrics": [
+    {
+      "method": "MSE",
+      "seed": 13711,
+      "epoch": 100,
+      "test_files": 400,
+      "AUC_pooled": 0.9543,
+      "pAUC_pooled_max_fpr_0_1": 0.8685526315789474,
+      "threshold_train_gamma_q90": 14.26483055241609,
+      "AUC_source_dcase": 0.95365,
+      "AUC_source_within_domain": 0.9328000000000001,
+      "pAUC_source_within_domain": 0.9047368421052631,
+      "F1_source": 0.76,
+      "AUC_target_dcase": 0.95495,
+      "AUC_target_within_domain": 0.9706,
+      "pAUC_target_within_domain": 0.8452631578947369,
+      "F1_target": 0.8733624454148472,
+      "hmean_source_target_pAUC": 0.9238960101677506
+    },
+    {
+      "method": "MAHALA",
+      "seed": 13711,
+      "epoch": 100,
+      "test_files": 400,
+      "AUC_pooled": 0.94955,
+      "pAUC_pooled_max_fpr_0_1": 0.8277631578947369,
+      "threshold_train_gamma_q90": 0.11618550520413322,
+      "AUC_source_dcase": 0.9847,
+      "AUC_source_within_domain": 0.9794,
+      "pAUC_source_within_domain": 0.9284210526315789,
+      "F1_source": 0.6666666666666666,
+      "AUC_target_dcase": 0.9143999999999999,
+      "AUC_target_within_domain": 0.9338000000000001,
+      "pAUC_target_within_domain": 0.758421052631579,
+      "F1_target": 0.6666666666666666,
+      "hmean_source_target_pAUC": 0.9043700826302173
+    }
+  ]
+}

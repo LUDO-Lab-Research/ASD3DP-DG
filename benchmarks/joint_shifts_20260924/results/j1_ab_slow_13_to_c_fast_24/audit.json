@@ -1,0 +1,15 @@
+{
+  "status": "VALIDATED",
+  "fold": "j1_ab_slow_13_to_c_fast_24",
+  "train_count": 1000,
+  "test_count": 400,
+  "train_selection_sha256": "7ed11af86307b655f3edbc5125f087c2f4f13f6ae6ee560fadc1d79c74ee462e",
+  "test_selection_sha256": "afaefa7a1f0730e79e790ce4c6bd40b84125ddae75f5b9424ad4d9d5948eb3ca",
+  "selection_sha256": "08c9b43684e4b5cd23f4cfdf6a59dada561e51b9d792a6fe454380f1c1fff9a8",
+  "audio_hashes_checked": 1400,
+  "train_sessions": 6,
+  "test_sessions": 33,
+  "train_temporal_intervals": 806,
+  "test_temporal_intervals": 400,
+  "scope": "File, annotation, ratio and overlap audit; not independent acoustic ground-truth verification."
+}
