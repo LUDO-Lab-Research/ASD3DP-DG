@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ASD3DP-DG public dataset guide">
+<title>Joint shifts · ASD3DP-DG</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><a class="brand" href="index.html">ASD3DP-DG</a><nav aria-label="Guide"><a href="index.html">Overview</a><a href="collection.html">Collection</a><a href="layout.html">Files</a><a href="timebase.html">Time coordinates</a><a href="selection.html">Clip selection</a><a href="annotations.html">Annotations</a><a href="schemas.html">Schemas</a><a href="fields.html">Field dictionary</a><a href="verification.html">Verification</a><a href="joint-benchmark.html" aria-current="page">Joint shifts</a><a href="limits.html">Limitations</a><a href="download.html">Downloads</a></nav></header>
+<main id="content"><h1 id="three-factor-joint-shift-benchmark">Three-factor joint-shift benchmark</h1>
+<p>The current ASD3DP-DG benchmark fixes three <strong>joint</strong> changes in printer build,
+speed protocol, and microphone position. These factors change together, so a
+score difference cannot be attributed to one factor alone.</p>
+<table>
+<thead>
+<tr>
+<th>Split</th>
+<th>Source</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>J1</td>
+<td>A+B, Slow, CH1 rear + CH3 front</td>
+<td>C, Fast, CH2 left + CH4 right</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>A+C, Fast, CH2 left + CH4 right</td>
+<td>B, Slow, CH1 rear + CH3 front</td>
+</tr>
+<tr>
+<td>J3</td>
+<td>B+C, Slow, CH1 rear + CH2 left</td>
+<td>A, Fast, CH3 front + CH4 right</td>
+</tr>
+</tbody>
+</table>
+<p>In <strong>each</strong> split, training has 990 source-normal and 10 target-normal mono
+files. The two source printers contribute 495 files each. Evaluation has 100
+normal and 100 anomaly files in each domain. Each domain's 100 anomalies
+contain 25 belt, 25 extruder, 25 fan, and 25 collision files. The source
+test's two printers contribute 50 files each for normal and anomaly labels;
+the permitted channel pair is balanced within each partition/domain.</p>
+<p>Normal repetitions 1 and 2 supply training; repetition 3 supplies normal
+evaluation. Fault sessions supply anomaly evaluation. Thus train/test sessions
+are disjoint. Two microphones can provide two <strong>training files</strong> from the same
+ten-second source interval; they are correlated views, not independent events.
+No source interval crosses training and evaluation. The benchmark uses the
+unchanged r4 clip boundaries and original mono PCM files.</p>
+<p>The <a href="https://github.com/LUDO-Lab-Research/ASD3DP-DG/blob/main/benchmarks/joint_shifts_20260924/README.md">frozen recipes, selected-sample CSVs, and builder</a>
+record exact file membership and source hashes. The earlier printer-only
+rotations are separate historical experiments and are not evidence for these
+joint shifts. The completed baseline uses 100 epochs and one fixed seed per
+split; <a href="https://github.com/LUDO-Lab-Research/ASD3DP-DG/blob/main/benchmarks/joint_shifts_20260924/results/README.md">file scores, checkpoints, and verification receipts</a>
+are available with the frozen selection.</p>
+<table>
+<thead>
+<tr>
+<th>Split</th>
+<th>Score</th>
+<th style="text-align: right;">Source AUC</th>
+<th style="text-align: right;">Target AUC</th>
+<th style="text-align: right;">Pooled pAUC</th>
+<th style="text-align: right;">Belt</th>
+<th style="text-align: right;">Extruder</th>
+<th style="text-align: right;">Fan</th>
+<th style="text-align: right;">Collision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>J1</td>
+<td>MSE</td>
+<td style="text-align: right;">92.97</td>
+<td style="text-align: right;">64.86</td>
+<td style="text-align: right;">78.68</td>
+<td style="text-align: right;">43.12</td>
+<td style="text-align: right;">50.08</td>
+<td style="text-align: right;">66.24</td>
+<td style="text-align: right;">100.00</td>
+</tr>
+<tr>
+<td>J1</td>
+<td>Mahalanobis</td>
+<td style="text-align: right;">91.42</td>
+<td style="text-align: right;">92.86</td>
+<td style="text-align: right;">80.18</td>
+<td style="text-align: right;">80.10</td>
+<td style="text-align: right;">93.70</td>
+<td style="text-align: right;">97.62</td>
+<td style="text-align: right;">100.00</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>MSE</td>
+<td style="text-align: right;">96.84</td>
+<td style="text-align: right;">92.39</td>
+<td style="text-align: right;">87.43</td>
+<td style="text-align: right;">73.54</td>
+<td style="text-align: right;">96.14</td>
+<td style="text-align: right;">99.88</td>
+<td style="text-align: right;">100.00</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>Mahalanobis</td>
+<td style="text-align: right;">98.11</td>
+<td style="text-align: right;">88.14</td>
+<td style="text-align: right;">82.47</td>
+<td style="text-align: right;">63.74</td>
+<td style="text-align: right;">90.18</td>
+<td style="text-align: right;">98.64</td>
+<td style="text-align: right;">100.00</td>
+</tr>
+<tr>
+<td>J3</td>
+<td>MSE</td>
+<td style="text-align: right;">95.36</td>
+<td style="text-align: right;">95.49</td>
+<td style="text-align: right;">86.86</td>
+<td style="text-align: right;">89.50</td>
+<td style="text-align: right;">95.78</td>
+<td style="text-align: right;">96.70</td>
+<td style="text-align: right;">100.00</td>
+</tr>
+<tr>
+<td>J3</td>
+<td>Mahalanobis</td>
+<td style="text-align: right;">98.47</td>
+<td style="text-align: right;">91.44</td>
+<td style="text-align: right;">82.78</td>
+<td style="text-align: right;">79.40</td>
+<td style="text-align: right;">91.34</td>
+<td style="text-align: right;">95.02</td>
+<td style="text-align: right;">100.00</td>
+</tr>
+</tbody>
+</table>
+<p>Values are percentages from one completed training run per split. Source and
+Target AUC use normal files from the named domain against anomalies pooled
+across domains; fault-family columns are Target AUC against 50 anomalies per
+family. Pooled pAUC uses all 400 test files and maximum false-positive rate
+0.1. The 100% collision values describe these selected command-linked impacts,
+not unseen collisions or an independent factor effect.</p></main>
+<footer><a href="https://github.com/LUDO-Lab-Research/ASD3DP-DG">ASD3DP-DG on GitHub</a></footer>
+</body>
+</html>
