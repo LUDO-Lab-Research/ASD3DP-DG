@@ -1,0 +1,52 @@
+{
+  "created_utc": "2026-09-24T05:23:37.602436+00:00",
+  "seeds": [
+    13711
+  ],
+  "epochs_per_seed": 100,
+  "checkpoint": "final epoch 100; no test-selected checkpoint",
+  "training": "DCASE2023T2-AE training/scoring core, H100, fixed hyperparameters",
+  "score_methods": [
+    "MSE",
+    "MAHALA"
+  ],
+  "folds": {
+    "j1_ab_slow_13_to_c_fast_24": {
+      "selection_sha256": "08c9b43684e4b5cd23f4cfdf6a59dada561e51b9d792a6fe454380f1c1fff9a8",
+      "train_selection_sha256": "7ed11af86307b655f3edbc5125f087c2f4f13f6ae6ee560fadc1d79c74ee462e",
+      "test_selection_sha256": "afaefa7a1f0730e79e790ce4c6bd40b84125ddae75f5b9424ad4d9d5948eb3ca"
+    },
+    "j2_ac_fast_24_to_b_slow_13": {
+      "selection_sha256": "d6e9360d2413e3cc632a7231d011d26b619910d81e8a706f97ae10119d170107",
+      "train_selection_sha256": "84e6d7dc166f8dc47512e209dad9f40bbfb42a61a55c0ffa1be1b46fe5b432ab",
+      "test_selection_sha256": "824255a95ac43d995c6033218c3028668ae1c7f1a3eb7376de34c0c28ddf8ff4"
+    },
+    "j3_bc_slow_12_to_a_fast_34": {
+      "selection_sha256": "77d142d6a83b7724c6bbeec689bdf4ccb7d7e4c8c9f58c2eba76ce68afb08fb7",
+      "train_selection_sha256": "d97446a25487a9988a5f19b5f9ef156c6749a27e6d1eebcbd4ca80b34304618d",
+      "test_selection_sha256": "9b757248a38831a0b7a0923bbd781d58c1dd44b3a0995ddeaa72ce0e4c4679a9"
+    }
+  },
+  "expected_source_hashes": {
+    "baseline.yaml": "2935472b20f35b2050048936dbad8b1681322cf586d31eb1cb69f20a2ff02654",
+    "common.py": "e5bf4a0d63a085c846e42db4a75625da7999dfc49364309d2d5d3f8829fbcc89",
+    "datasets/datasets.py": "07cb7d6dfefec0f5e825439122fe5d30e3c72cd12f9f24a2d45b0dba70564e71",
+    "datasets/dcase_dcase202x_t2_loader.py": "860df81128fc065018ed1168b2403fd8f23d9c939a50dd9391184473fcf462cb",
+    "datasets/loader_common.py": "da6c0888c7d816cce45f519649ce0c13ad8ab458808ed4879780cbd2b5383543",
+    "datasets/machine_type_2023_dev.yaml": "c0f656e1d320541db0a03d97b0a637c87a5ca020d05676b0435d610f513422bd",
+    "networks/base_model.py": "2e699512d140160ad55dd5bd970c3b6391c1b3c4fa7700ba61e7a82638f93e49",
+    "networks/criterion/mahala.py": "d375154540d48557c3f16be661f9e239b304b8629c7cb79f657718d17ff70ba2",
+    "networks/dcase2023t2_ae/dcase2023t2_ae.py": "57c044e224581d31a3bbf35fb12b5d28e9905b455e385e828c2e3c6ac5495dd6",
+    "networks/dcase2023t2_ae/network.py": "5c25e56bd88f50433eaac52b16d7752f4c489f735c312d572e632ad15c080b36",
+    "networks/models.py": "7e960913ac638842f00d4c489fa1b6ceb19e191b1f994e1f63d7c1a061be4268",
+    "tools/plot_anm_score.py": "9ba132aa2db12a0aea078104a51de39eb2433bab5942270405680ce26f3891fa",
+    "tools/plot_common.py": "54f6f8e40f3fa86236d55835ff9e7aa80e0481ab2ba846137c46d1f7ef92c4a5",
+    "tools/plot_loss_curve.py": "40a20df403e2debd6540117e2a3da782bbdbb0356267ccbd825e90d8b5ed1277",
+    "tools/plot_time_frequency.py": "caffb4a1ffb6ffee8d1da12a885302dc91039c5d99f4603fabb29fdd90dcb48a",
+    "train.py": "c6fc647edf2e65e2c3799eda58313bd4c9dfad136c33113930730117830b6cc5"
+  },
+  "dataset_annotation_revision": "r4-20260924",
+  "cublas_workspace_config": ":4096:8",
+  "factor_interpretation": "Printer, speed protocol, and microphone pair change together; scores do not identify an independent factor effect.",
+  "no_test_selection": "No test set used to choose checkpoint or score method."
+}

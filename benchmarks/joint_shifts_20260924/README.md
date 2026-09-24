@@ -35,6 +35,11 @@ hashes and PCM shape, and exports their r4 G-code, telemetry, timeline, and
 range annotations. A completed dataset has `DATASET_READY.json` with status
 `VERIFIED_JOINT_SHIFT_SUBSET` and `SHA256SUMS`.
 
+[`training_protocol.json`](training_protocol.json) freezes the three selection
+hashes, 100-epoch final-checkpoint rule, seed 13711, and the source-code hashes
+of the training/scoring baseline. It is a protocol record, not a claim that the
+new results have completed verification.
+
 Training and test use the same DCASE2023 Task 2 autoencoder/scoring code and
 hyperparameters as the historical baseline, with **100 epochs and one fixed
 seed (13711) per assignment**. The final epoch is scored; no test set chooses a
