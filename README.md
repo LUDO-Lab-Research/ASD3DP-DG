@@ -23,3 +23,15 @@ printer-only rotations are retained separately.
   url          = {https://github.com/LUDO-Lab-Research/ASD3DP-DG}
 }
 ```
+
+For the original [ASD3DP dataset](https://github.com/LUDO-Lab-Research/ASD3DP), use its separate citation:
+
+```bibtex
+@misc{kim2026asd3dp,
+  title        = {{ASD3DP}: Session- and Clip-Level Annotation Bundle for a Real-World Four-Channel 3D-Printer Anomalous Sound Dataset},
+  author       = {Kim, JeongSik and Sung, JongWoo and Bae, HyeonJun and Kim, BoRyeon and Lee, JiAn},
+  year         = {2026},
+  doi          = {10.5281/zenodo.21313911},
+  url          = {https://doi.org/10.5281/zenodo.21313911}
+}
+```
