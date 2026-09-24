@@ -4,11 +4,25 @@ The current ASD3DP-DG benchmark fixes three **joint** changes in printer build,
 speed protocol, and microphone position. These factors change together, so a
 score difference cannot be attributed to one factor alone.
 
-| Split | Source | Target |
-|---|---|---|
-| J1 | A+B, Slow, CH1 rear + CH3 front | C, Fast, CH2 left + CH4 right |
-| J2 | A+C, Fast, CH2 left + CH4 right | B, Slow, CH1 rear + CH3 front |
-| J3 | B+C, Slow, CH1 rear + CH2 left | A, Fast, CH3 front + CH4 right |
+Printer labels A, B, and C denote distinct builds. Slow/Fast are G-code
+program families, not fixed attained head speeds; ordinary commanded feedrates
+reach 12,000/30,000 mm/min, respectively. CH1/CH2/CH3/CH4 are rear/left/front/right
+microphones, as defined in [Collection](collection.md).
+
+| Split | Factor | Source | Target |
+|---|---|---|---|
+| J1 | Printer | A+B | C |
+|  | Speed program | Slow | Fast |
+|  | Microphones | CH1+CH3 | CH2+CH4 |
+| J2 | Printer | A+C | B |
+|  | Speed program | Fast | Slow |
+|  | Microphones | CH2+CH4 | CH1+CH3 |
+| J3 | Printer | B+C | A |
+|  | Speed program | Slow | Fast |
+|  | Microphones | CH1+CH2 | CH3+CH4 |
+| All splits | Train normal files | 990 | 10 |
+|  | Test normal files | 100 | 100 |
+|  | Test anomaly files | 100 | 100 |
 
 In **each** split, training has 990 source-normal and 10 target-normal mono
 files. The two source printers contribute 495 files each. Evaluation has 100

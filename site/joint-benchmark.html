@@ -13,10 +13,15 @@
 <p>The current ASD3DP-DG benchmark fixes three <strong>joint</strong> changes in printer build,
 speed protocol, and microphone position. These factors change together, so a
 score difference cannot be attributed to one factor alone.</p>
+<p>Printer labels A, B, and C denote distinct builds. Slow/Fast are G-code
+program families, not fixed attained head speeds; ordinary commanded feedrates
+reach 12,000/30,000 mm/min, respectively. CH1/CH2/CH3/CH4 are rear/left/front/right
+microphones, as defined in <a href="collection.html">Collection</a>.</p>
 <table>
 <thead>
 <tr>
 <th>Split</th>
+<th>Factor</th>
 <th>Source</th>
 <th>Target</th>
 </tr>
@@ -24,18 +29,75 @@ score difference cannot be attributed to one factor alone.</p>
 <tbody>
 <tr>
 <td>J1</td>
-<td>A+B, Slow, CH1 rear + CH3 front</td>
-<td>C, Fast, CH2 left + CH4 right</td>
+<td>Printer</td>
+<td>A+B</td>
+<td>C</td>
+</tr>
+<tr>
+<td></td>
+<td>Speed program</td>
+<td>Slow</td>
+<td>Fast</td>
+</tr>
+<tr>
+<td></td>
+<td>Microphones</td>
+<td>CH1+CH3</td>
+<td>CH2+CH4</td>
 </tr>
 <tr>
 <td>J2</td>
-<td>A+C, Fast, CH2 left + CH4 right</td>
-<td>B, Slow, CH1 rear + CH3 front</td>
+<td>Printer</td>
+<td>A+C</td>
+<td>B</td>
+</tr>
+<tr>
+<td></td>
+<td>Speed program</td>
+<td>Fast</td>
+<td>Slow</td>
+</tr>
+<tr>
+<td></td>
+<td>Microphones</td>
+<td>CH2+CH4</td>
+<td>CH1+CH3</td>
 </tr>
 <tr>
 <td>J3</td>
-<td>B+C, Slow, CH1 rear + CH2 left</td>
-<td>A, Fast, CH3 front + CH4 right</td>
+<td>Printer</td>
+<td>B+C</td>
+<td>A</td>
+</tr>
+<tr>
+<td></td>
+<td>Speed program</td>
+<td>Slow</td>
+<td>Fast</td>
+</tr>
+<tr>
+<td></td>
+<td>Microphones</td>
+<td>CH1+CH2</td>
+<td>CH3+CH4</td>
+</tr>
+<tr>
+<td>All splits</td>
+<td>Train normal files</td>
+<td>990</td>
+<td>10</td>
+</tr>
+<tr>
+<td></td>
+<td>Test normal files</td>
+<td>100</td>
+<td>100</td>
+</tr>
+<tr>
+<td></td>
+<td>Test anomaly files</td>
+<td>100</td>
+<td>100</td>
 </tr>
 </tbody>
 </table>

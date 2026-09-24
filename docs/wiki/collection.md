@@ -13,7 +13,7 @@ The directions describe microphone views. They do not define camera placement or
 
 The three printer domains are different assembled builds. A and B use Voron 0.2r1 configurations, with B using an LDO V0.1 frame; C is a red-frame Voron 0.2r1 configuration. Domain identity includes component and assembly differences together. It does not isolate the effect of an individual component.
 
-Each printer has 26 sessions. Within each slow and fast program family there are three normal repetitions, three belt interventions (Belt A, Belt B, and both belts), one fan intervention, one extruder intervention, and five collision directions. Slow and fast denote G-code program families rather than a constant attained toolhead speed.
+Each printer has 26 sessions. Within each slow and fast program family there are three normal repetitions, three belt interventions (Belt A, Belt B, and both belts), one fan intervention, one extruder intervention, and five collision directions. Slow and Fast denote G-code program families rather than a constant attained toolhead speed. In ordinary runs, the highest explicit commanded feedrates are 12,000 and 30,000 mm/min, respectively; each program uses multiple feedrates and the actual speed can vary by move.
 
 Belt interventions changed rear-tensioner displacement relative to a normal setting. Fan sessions used physical damage to three blades on the right part-cooling fan. Extruder sessions used a loaded-filament cogging intervention. Collision sessions followed five direction-specific contact protocols. Outside the extruder condition, the protocol used no-filament motion. The filament material used for the loaded condition was PLA.
 
