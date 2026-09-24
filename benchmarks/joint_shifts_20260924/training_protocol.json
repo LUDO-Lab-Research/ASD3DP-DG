@@ -48,5 +48,12 @@
   "dataset_annotation_revision": "r4-20260924",
   "cublas_workspace_config": ":4096:8",
   "factor_interpretation": "Printer, speed protocol, and microphone pair change together; scores do not identify an independent factor effect.",
-  "no_test_selection": "No test set used to choose checkpoint or score method."
+  "no_test_selection": "No test set used to choose checkpoint or score method.",
+  "source_metadata_manifest_sha256": "875f50bdd9b869baa2ba6ca276495d8f479cbe1338547e20e6882b8012e59d7c",
+  "source_annotation_sha256": {
+    "annotations/clip/clip_gcode.csv": "d478d1b7c549b9a30cebec76c38f4af90221f80ba2dda1e95f6aff57b25eb38c",
+    "annotations/clip/clip_telemetry.csv": "11c80f0def66e08f5b507cc8f2bb5c15bcf7fe87572e1ab617d9323d4092e7d9",
+    "annotations/clip/clip_timeline.csv": "dda64a0a56bfa06f80021dfcb316dbefd5523a069cbf0e2a1093e454675a1597",
+    "annotations/clip/clip_annotations_range.csv": "a6c6521b86ba4cac895522302d1b555e7097e945f27cf206a8f943f9bc1e5839"
+  }
 }

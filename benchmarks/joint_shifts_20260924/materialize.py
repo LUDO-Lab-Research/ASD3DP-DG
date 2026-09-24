@@ -50,6 +50,18 @@ def main():
     for name, digest in recipe["source_input_sha256"].items():
         if sha(source / name) != digest:
             raise ValueError(f"Source metadata changed: {name}")
+    manifest = {}
+    with (source / "METADATA_SHA256SUMS").open() as stream:
+        for line in stream:
+            digest, relative = line.rstrip("\n").split("  ", 1)
+            manifest[relative] = digest
+    source_annotation_hashes = {}
+    for filename in ANNOTATIONS:
+        relative = f"annotations/clip/{filename}"
+        actual = sha(source / relative)
+        if manifest.get(relative) != actual:
+            raise ValueError(f"r4 annotation differs from its release manifest: {relative}")
+        source_annotation_hashes[relative] = actual
     if len(selected) != 1400:
         raise ValueError("Expected 1,400 WAV files")
     need_bytes = sum(int(r["bytes"]) for r in selected)
@@ -124,12 +136,15 @@ def main():
             for r in selected:
                 if r["partition"] == "test":
                     writer.writerow((Path(r["destination_audio_path"]).name, int(r[field] == ("anomaly" if kind == "data" else "target"))))
-    manifest = {str(p.relative_to(stage)): sha(p) for p in stage.rglob("*") if p.is_file() and p.name not in ("SHA256SUMS", "DATASET_READY.json")}
-    (stage / "SHA256SUMS").write_text("".join(f"{digest}  {name}\n" for name, digest in sorted(manifest.items())))
+    output_hashes = {str(p.relative_to(stage)): sha(p) for p in stage.rglob("*") if p.is_file() and p.name not in ("SHA256SUMS", "DATASET_READY.json")}
+    (stage / "SHA256SUMS").write_text("".join(f"{digest}  {name}\n" for name, digest in sorted(output_hashes.items())))
     receipt = {"status": "VERIFIED_JOINT_SHIFT_SUBSET", "fold": selection.name,
                "selection_sha256": recipe["selection_sha256"], "source_annotation_revision": recipe["annotation_revision"],
                "train_count": 1000, "test_count": 400, "audio_hashes_checked": copies,
-               "annotation_tables_checked": list(ANNOTATIONS), "source_retained": True}
+               "annotation_tables_checked": list(ANNOTATIONS),
+               "source_metadata_manifest_sha256": sha(source / "METADATA_SHA256SUMS"),
+               "source_annotation_sha256": source_annotation_hashes,
+               "source_retained": True}
     (stage / "DATASET_READY.json").write_text(json.dumps(receipt, indent=2) + "\n")
     os.rename(stage, output)
     print(json.dumps(receipt, indent=2), flush=True)

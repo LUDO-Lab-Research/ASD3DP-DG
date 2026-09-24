@@ -32,7 +32,9 @@ hashes. Each `selections/<assignment>/recipe.json` records the exact selection
 SHA-256 and domain rule; `selected_samples.csv` records every file and its
 original WAV SHA-256. `materialize.py` copies selected WAVs, re-reads their
 hashes and PCM shape, and exports their r4 G-code, telemetry, timeline, and
-range annotations. A completed dataset has `DATASET_READY.json` with status
+range annotations. The four source annotation tables are rehashed against
+the r4 metadata manifest, whose digest is frozen in the training protocol.
+A completed dataset has `DATASET_READY.json` with status
 `VERIFIED_JOINT_SHIFT_SUBSET` and `SHA256SUMS`.
 
 [`training_protocol.json`](training_protocol.json) freezes the three selection
