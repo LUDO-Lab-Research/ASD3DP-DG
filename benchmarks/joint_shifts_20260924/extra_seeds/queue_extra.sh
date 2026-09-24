@@ -25,6 +25,8 @@ for fold in j1_ab_slow_13_to_c_fast_24 j2_ac_fast_24_to_b_slow_13 j3_bc_slow_12_
       "$PYTHON_BIN" "$RUN_DIR/evaluate_fold.py" --fold "$fold" --seed "$seed" \
         --output-dir "$output" --audit-json "$RUN_DIR/evaluation/$fold/audit.json" \
         > "$RUN_DIR/logs/$fold/evaluate_seed$seed.log" 2>&1
+    fi
+    if [[ ! -f "$output/fault_verification.json" ]]; then
       "$PYTHON_BIN" "$RUN_DIR/summarize_faults.py" --output-dir "$output" \
         > "$RUN_DIR/logs/$fold/fault_seed$seed.log" 2>&1
     fi
