@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use ASD3DP-DG, please cite the dataset using this metadata."
+type: dataset
+title: "ASD3DP-DG: A Controlled Multi-Printer Dataset for Anomalous Sound Detection under Domain Shift"
+authors:
+  - family-names: "Kim"
+    given-names: "JeongSik"
+    affiliation: "LUDO Lab"
+    orcid: "https://orcid.org/0009-0003-2918-0586"
+  - family-names: "Sung"
+    given-names: "JongWoo"
+    affiliation: "LUDO Lab"
+  - family-names: "Bae"
+    given-names: "HyeonJun"
+    affiliation: "LUDO Lab"
+  - family-names: "Kim"
+    given-names: "BoRyeon"
+    affiliation: "LUDO Lab"
+  - family-names: "Lee"
+    given-names: "JiAn"
+    affiliation: "LUDO Lab"
+abstract: >-
+  ASD3DP-DG is a four-channel 3D-printer operating-sound dataset for anomalous
+  sound detection under domain shift. It covers three printer builds and
+  includes session and clip annotations linked to collection evidence.
+keywords:
+  - anomalous sound detection
+  - 3D printing
+  - domain shift
+  - multichannel audio
+  - machine condition monitoring
+url: "https://github.com/LUDO-Lab-Research/ASD3DP-DG"
+repository-code: "https://github.com/LUDO-Lab-Research/ASD3DP-DG"

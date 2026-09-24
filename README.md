@@ -11,3 +11,7 @@ the completed J1–J3 printer, speed, and microphone-pair assignments. Its
 [verified per-file scores and checkpoints](benchmarks/joint_shifts_20260924/results/README.md)
 are linked to the fixed selections and independent result checks. Earlier
 printer-only rotations are retained separately.
+
+## Citation
+
+If you use ASD3DP-DG, cite the dataset with the supplied [BibTeX entry](CITATION.bib). GitHub's citation menu uses [CITATION.cff](CITATION.cff). A persistent dataset identifier can be added when one is assigned.
