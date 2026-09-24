@@ -13,6 +13,12 @@ selected dataset once, trains the six models sequentially, evaluates each
 fixed test after training, and writes `queue.exit`. A prior checkpoint is
 never overwritten; a successful partial queue can be resumed.
 
+To shorten the H100 run while respecting the host's 31-GiB RAM limit,
+`queue_helper.sh` can run J2/13712 then J3/13712 alongside the main queue.
+It must begin while the main queue is still on J1, and finish each claimed
+job before the main queue reaches it. The main queue then sees their success
+receipts and skips them; do not start a third concurrent trainer.
+
 No new scores or variability claims are added to the paper until the six
 file-score tables and model hashes have been returned and independently
 verified against the frozen selections.
