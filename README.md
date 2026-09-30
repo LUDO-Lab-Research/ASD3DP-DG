@@ -20,7 +20,8 @@ printer-only rotations are retained separately.
   author       = {Kim, JeongSik and Sung, JongWoo and Bae, HyeonJun and Kim, BoRyeon and Lee, JiAn},
   year         = {2026},
   publisher    = {LUDO Lab},
-  url          = {https://github.com/LUDO-Lab-Research/ASD3DP-DG}
+  doi          = {10.5281/zenodo.23068430},
+  url          = {https://doi.org/10.5281/zenodo.23068430}
 }
 ```
 
