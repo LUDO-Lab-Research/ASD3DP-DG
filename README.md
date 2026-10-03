@@ -5,12 +5,16 @@
 > **Dataset download:** [Zenodo (DOI: 10.5281/zenodo.23068430)](https://doi.org/10.5281/zenodo.23068430)
 >
 > **Guide:** [Overview](docs/wiki/index.md) · [Downloads and extraction](docs/wiki/download.md)
+>
+> **Supplementary videos:** [Session review videos on Google Drive](https://drive.google.com/drive/folders/1z7c6IUJReQsaQVUOaGZL0Yhf2dsEkNpg)
 
 ASD3DP-DG extends [ASD3DP](https://github.com/LUDO-Lab-Research/ASD3DP) to three printer-build domains, labeled A, B, and C. It provides four-channel 3D-printer audio and session and clip annotations for anomalous sound detection under domain shift. This is a DCASE Task 2-style research dataset, not an official DCASE-organized release.
 
 The collection contains 78 sessions, 40.05 hours of continuous audio, and 11,861 selected 10-second intervals. Four microphone channels provide 47,444 mono clip views. The channels are rear, left, front, and right. Printer A/B/C are build labels; Belt A/B are component names.
 
-The Zenodo release provides 78 full-session and 78 selected-clip audio archives, annotations, and evidence.
+The Zenodo release provides 78 full-session and 78 selected-clip audio archives, annotations, and evidence. The dataset is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+The supplementary videos are compressed review copies showing session context. They are separate from the audio dataset and do not provide visual benchmark labels.
 
 The [three-factor joint-shift benchmark](docs/wiki/joint-benchmark.md) reports
 the completed J1–J3 printer, speed, and microphone-pair assignments. Its
