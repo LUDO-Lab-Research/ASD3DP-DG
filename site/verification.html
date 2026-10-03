@@ -10,7 +10,7 @@
 <body>
 <header><a class="brand" href="index.html">ASD3DP-DG</a><nav aria-label="Guide"><a href="index.html">Overview</a><a href="collection.html">Collection</a><a href="layout.html">Files</a><a href="timebase.html">Time coordinates</a><a href="selection.html">Clip selection</a><a href="annotations.html">Annotations</a><a href="schemas.html">Schemas</a><a href="fields.html">Field dictionary</a><a href="verification.html" aria-current="page">Verification</a><a href="joint-benchmark.html">Joint shifts</a><a href="limits.html">Limitations</a><a href="download.html">Downloads</a></nav></header>
 <main id="content"><h1 id="verification">Verification</h1>
-<p>Verify each downloaded file against the top-level <code>SHA256SUMS</code> in the <a href="https://drive.google.com/drive/folders/1dABXcAjs-b6dA5qjiMSdtwvO69cFOt2g">Google Drive dataset folder</a> before extraction. The audio files are independent session archives, so you can extract one session at a time.</p>
+<p>After extracting the three multipart 7-Zip groups, run <code>sha256sum -c SHA256SUMS</code> from the release root. This verifies the reconstructed release files. The audio files are independent session archives, so you can extract one session at a time.</p>
 <table>
 <thead>
 <tr>
@@ -20,8 +20,12 @@
 </thead>
 <tbody>
 <tr>
-<td>Archive</td>
-<td>File size and SHA-256 for every part; successful extraction</td>
+<td>Distribution</td>
+<td>All numbered 7-Zip parts present; successful extraction</td>
+</tr>
+<tr>
+<td>Release files</td>
+<td>SHA-256 checks against the top-level manifest</td>
 </tr>
 <tr>
 <td>Source audio</td>

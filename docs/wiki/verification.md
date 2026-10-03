@@ -1,10 +1,11 @@
 # Verification
 
-Verify each downloaded file against the top-level `SHA256SUMS` in the [Google Drive dataset folder](https://drive.google.com/drive/folders/1dABXcAjs-b6dA5qjiMSdtwvO69cFOt2g) before extraction. The audio files are independent session archives, so you can extract one session at a time.
+After extracting the three multipart 7-Zip groups, run `sha256sum -c SHA256SUMS` from the release root. This verifies the reconstructed release files. The audio files are independent session archives, so you can extract one session at a time.
 
 | Stage | Check |
 |---|---|
-| Archive | File size and SHA-256 for every part; successful extraction |
+| Distribution | All numbered 7-Zip parts present; successful extraction |
+| Release files | SHA-256 checks against the top-level manifest |
 | Source audio | Four-channel format, 48 kHz PCM, source manifest hashes |
 | Clip plan | Ten-second grid, source-frame boundaries, selection reasons |
 | Mono audio | Four channel files per selected clip; 480,000 frames per file |

@@ -36,7 +36,7 @@ evaluation. Fault sessions supply anomaly evaluation. Thus train/test sessions
 are disjoint. Two microphones can provide two **training files** from the same
 ten-second source interval; they are correlated views, not independent events.
 No source interval crosses training and evaluation. The benchmark uses the
-unchanged r4 clip boundaries and original mono PCM files.
+released clip boundaries and original mono PCM files.
 
 The [frozen recipes, selected-sample CSVs, and builder](../../benchmarks/joint_shifts_20260924/README.md)
 record exact file membership and source hashes. The earlier printer-only

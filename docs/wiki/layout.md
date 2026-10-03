@@ -8,7 +8,7 @@ The public dataset is organized into three archive groups, following the distrib
 | `annotations` | Session, clip, timing, and interval tables |
 | `clipped` | Selected 10-second mono WAVs by channel |
 
-The [Downloads](download.md) page links the Google Drive folder and describes the session archives. Each audio archive can be extracted independently; use the top-level `SHA256SUMS` to check its bytes first.
+The [Downloads](download.md) page links the Zenodo record and describes the session archives. After extracting the distribution groups, check each session archive against `SHA256SUMS` before opening it.
 
 ## File relationships
 
