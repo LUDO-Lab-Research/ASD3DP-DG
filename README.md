@@ -6,6 +6,8 @@
 >
 > **Guide:** [Overview](docs/wiki/index.md) · [Downloads and extraction](docs/wiki/download.md)
 >
+> **Detailed wiki (sign-in required):** [English](https://asd3dp-dg.ludo-demo.com/wiki/en/) · [한국어](https://asd3dp-dg.ludo-demo.com/wiki/index.html)
+>
 > **Supplementary videos:** [Session review videos on Google Drive](https://drive.google.com/drive/folders/1z7c6IUJReQsaQVUOaGZL0Yhf2dsEkNpg)
 
 ASD3DP-DG extends [ASD3DP](https://github.com/LUDO-Lab-Research/ASD3DP) to three printer-build domains, labeled A, B, and C. It provides four-channel 3D-printer audio and session and clip annotations for anomalous sound detection under domain shift. This is a DCASE Task 2-style research dataset, not an official DCASE-organized release.

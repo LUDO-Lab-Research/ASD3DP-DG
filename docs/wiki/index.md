@@ -12,6 +12,8 @@ ASD3DP-DG extends [ASD3DP](https://github.com/LUDO-Lab-Research/ASD3DP) with rec
 
 These counts describe the selected collection before any benchmark subsampling. The release contains the audio, annotations, evidence, and checksums; see [Downloads](download.md).
 
+The detailed wiki has searchable field definitions and worked examples in [English](https://asd3dp-dg.ludo-demo.com/wiki/en/) and [Korean](https://asd3dp-dg.ludo-demo.com/wiki/index.html). Both links require Cloudflare sign-in.
+
 ## Read the guide
 
 1. [Collection conditions and audio](collection.md)
