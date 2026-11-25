@@ -1,6 +1,5 @@
 # ASD3DP-DG
 
-[![Wiki](docs/wiki/wiki-badge.svg)](docs/wiki/index.md)
 [![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23068430.svg)](https://doi.org/10.5281/zenodo.23068430)
 
 > **Dataset download:** [Zenodo (DOI: 10.5281/zenodo.23068430)](https://doi.org/10.5281/zenodo.23068430)
