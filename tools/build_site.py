@@ -18,7 +18,7 @@ PAGES = (
     ("selection", "Clip selection"),
     ("annotations", "Annotations"),
     ("schemas", "Schemas"),
-    ("fields", "Field dictionary"),
+    ("fields", "Released tables"),
     ("verification", "Verification"),
     ("joint-benchmark", "Joint shifts"),
     ("limits", "Limitations"),

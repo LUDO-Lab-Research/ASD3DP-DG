@@ -20,7 +20,7 @@ These counts describe the selected collection before any benchmark subsampling. 
 4. [Clip selection](selection.md)
 5. [Annotation layers](annotations.md)
 6. [Schema and field names](schemas.md)
-7. [Complete field dictionary](fields.md)
+7. [Reading the released tables](fields.md)
 8. [Verification](verification.md)
 9. [Limitations](limits.md)
 10. [Three-factor joint-shift benchmark](joint-benchmark.md)

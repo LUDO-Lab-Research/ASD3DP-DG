@@ -1,20 +1,16 @@
 # Annotation layers
 
-Annotations distinguish collection intent, setup, observed operation, review decisions, clip quality, and released intervals. A planned fault describes the experiment; it does not by itself label every moment of a session.
+The release describes collection conditions at the session level and activity at the clip level. G-code and telemetry provide context for recorded commands and observed printer states. Review decisions inform which evidence is included in the released intervals.
 
-| Layer | Example artifact | Meaning |
-|---|---|---|
-| Collection intent | `planned_annotation.json` | Condition and protocol chosen before recording |
-| Setup | `setup_measurement_snapshot.json` | Applied belt, fan, or collision settings |
-| Runtime | G-code and telemetry | Commands and recorded state observations |
-| Session review | `human_annotation.json` | Reviewer decisions and corrections |
-| Clip quality | Channel review record | Quality decision for a particular channel clip |
-| Release projection | Clip and interval CSVs | Admitted evidence in clip coordinates |
+| Layer | Meaning |
+|---|---|
+| Session context | Printer build, speed program, and planned condition |
+| Clip context | Source interval, microphone channel, and selection status |
+| Activity ranges | Operation, belt activity, and fault intervals within a clip |
+| Timing evidence | Original command observations and their corrected time ranges |
 
-`condition` and `fault_mode` describe different properties. The condition categories are `normal`, `soft-anomaly`, and `hard-anomaly`; these are collection categories, not measured damage severity. Fault modes include belt tension, cooling fan, extruder cogging, and toolhead collision. A print can complete while a fault is present.
+The collection uses normal, soft-anomaly, and hard-anomaly conditions. These categories describe the collection protocol. Fault families cover belt tension, cooling fan, extruder cogging, and toolhead collision. An anomaly session can contain inactive periods or finish printing.
 
-`clip_annotations_range.csv` contains within-clip interval projections. `clip_timeline.csv` preserves original command observations alongside corrected command ranges. `clip_gcode.csv` and `clip_telemetry.csv` connect clips to command and state context. Original G-code `;TYPE:` text and normalized labels remain distinguishable. Several operation, belt, and fault ranges may overlap in one clip; aggregate occupancy by interval union within a layer.
+Several ranges can overlap within a clip. To calculate how long one type of activity was present, take the union of its intervals. Preserve unknown values when the evidence is incomplete.
 
-The current annotation contract allows unknown or null values where evidence is incomplete. Preserve them instead of converting them to zero or a normal decision. Field names, CSV column order, and schema keys remain as defined in the supplied tables. Printer build labels appear as A, B, and C in public annotation values.
-
-See [Schema and field names](schemas.md) for interpretation and [Time coordinates](timebase.md) for interval origins.
+See [Schema and field names](schemas.md) for table interpretation and [Time coordinates](timebase.md) for interval origins.
